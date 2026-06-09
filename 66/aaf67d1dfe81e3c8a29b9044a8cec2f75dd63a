@@ -1,0 +1,89 @@
+packages/shared/src/constants.ts
+  s_249d5c4eb2e803::t_246c7ef09a8f1d 40-66
+apps/web/src/routes/index.tsx
+  s_249d5c4eb2e803::t_4995be97e921e1 24-54
+  s_249d5c4eb2e803::t_5535824f41334b 23
+apps/web/src/routes/register.tsx
+  s_249d5c4eb2e803::t_e8eabd64808673 37-105
+apps/web/src/routes/discover.tsx
+  s_249d5c4eb2e803::t_c7932902fb5cef 1-189
+apps/web/src/components/AppHeader.tsx
+  s_249d5c4eb2e803::t_943f1a51320737 27-68
+apps/web/src/routes/login.tsx
+  s_249d5c4eb2e803::t_840a207a549993 37-105
+packages/ui/src/TableCard/TableCard.tsx
+  s_249d5c4eb2e803::t_3526da577242bf 30-65
+apps/web/src/routes/__root.tsx
+  s_249d5c4eb2e803::t_bd79ba2772bb88 20-21
+  s_249d5c4eb2e803::t_3d94f05b82290b 54
+apps/web/src/routes/profile/edit.tsx
+  s_249d5c4eb2e803::t_05ac0af3c56c0d 107-111
+  s_249d5c4eb2e803::t_ae3c437736084b 164
+apps/web/src/routes/profile/$id.tsx
+  s_249d5c4eb2e803::t_d85182df5e82ad 52-70
+docs/prd/12-dev-standards.md
+  s_249d5c4eb2e803::t_0bbc0a6ff1ceaa 30
+apps/web/public/site.webmanifest
+  s_249d5c4eb2e803::t_df347db3155f76 2-3
+apps/web/src/routes/me/index.tsx
+  s_249d5c4eb2e803::t_41b1ebab8acd40 22-36
+apps/web/src/components/DefaultCatchBoundary.tsx
+  s_249d5c4eb2e803::t_774e790385dd8d 20-28
+apps/web/src/routes/auth/callback.tsx
+  s_249d5c4eb2e803::t_8aa2f2b34d38c8 40
+.cursor/rules/matchtable-stack.mdc
+  s_249d5c4eb2e803::t_1192382c802984 57-63
+apps/web/src/components/NotFound.tsx
+  s_249d5c4eb2e803::t_b1d7b7a343c7bd 10-16
+packages/shared/src/schemas/profile.ts
+  s_249d5c4eb2e803::t_54bb26c7a9e89c 37-39
+packages/ui/src/CompareTable/CompareTable.tsx
+  s_249d5c4eb2e803::t_f9ed3fe5f363ed 35-97
+  s_249d5c4eb2e803::t_4a55c41aec4ab9 139-145
+  s_249d5c4eb2e803::t_82b7d5f72d64cc 112
+  s_249d5c4eb2e803::t_f3ecbb647e3534 125
+apps/web/src/routes/me/requests.tsx
+  s_249d5c4eb2e803::t_c7d9e4f5e9e559 13-15
+apps/web/src/routes/compare.tsx
+  s_249d5c4eb2e803::t_e0a81bd9da8853 36-108
+apps/web/src/features/profile/ProfileForm.tsx
+  s_249d5c4eb2e803::t_5194b611215dc8 51
+  s_249d5c4eb2e803::t_a488f386e0d622 82
+  s_249d5c4eb2e803::t_438e6ff1c3b013 418
+  s_249d5c4eb2e803::t_d4bac861558679 386
+  s_249d5c4eb2e803::t_e1db04c3371e14 154
+  s_249d5c4eb2e803::t_27ec283199787c 95
+  s_249d5c4eb2e803::t_56ce9df19c2f00 221
+  s_249d5c4eb2e803::t_1354288b8d927b 255-261
+  s_249d5c4eb2e803::t_f4b8baf5d834f4 307
+  s_249d5c4eb2e803::t_7c99a381a47f97 231
+  s_249d5c4eb2e803::t_3f458373e60a45 435
+  s_249d5c4eb2e803::t_17f1320f999dbc 127
+  s_249d5c4eb2e803::t_7e1fc34cbe743e 175
+  s_249d5c4eb2e803::t_4195c66bd448fe 275
+  s_249d5c4eb2e803::t_634003c85ca4b5 163
+  s_249d5c4eb2e803::t_b9cf7d31a27987 198
+  s_249d5c4eb2e803::t_0ed11c99474b2b 63
+  s_249d5c4eb2e803::t_356763214beae3 113
+  s_249d5c4eb2e803::t_eab1137a7410f7 139
+  s_249d5c4eb2e803::t_6644a016689462 353-377
+  s_249d5c4eb2e803::t_462b62bd7673a1 327
+apps/web/src/routes/me/favorites.tsx
+  s_249d5c4eb2e803::t_c575e2ede341d3 13-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "66aaf67d1dfe81e3c8a29b9044a8cec2f75dd63a",
+  "prompts": {},
+  "sessions": {
+    "s_249d5c4eb2e803": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6b8c278f-c1ae-4c98-a8ac-683d15f738ff",
+        "model": "default"
+      },
+      "human_author": "nawbc <wanghan9423@outlook.com>"
+    }
+  }
+}
