@@ -1,0 +1,75 @@
+---
+description: MatchTable 技术栈 — TanStack Start + Supabase 约束
+alwaysApply: true
+---
+
+# MatchTable 技术栈
+
+## 必须使用
+
+- **Vite+** — 统一工具链：`vp dev apps/web` / `vp build` / `vp check` / `vp run`；根目录 [`vite.config.ts`](../../vite.config.ts) + `apps/web/vite.config.ts`
+- **TanStack Start** — 全栈框架
+- **TanStack Router** — 基于文件的路由
+- **TanStack Query** — 全部服务端数据（`queryOptions`、`mutationOptions`）
+- **TanStack Form** — 全部表单
+- **TanStack Table** — 数据表格
+- **TanStack Virtual** — 虚拟化列表
+- **TanStack Store** — Query 不足时的客户端状态
+- **React 19** + **Strict TypeScript**
+- **Supabase** — Auth、Database、Storage、Realtime，所有表启用 RLS
+- **Zod** — 表单、API、Server Functions 校验
+- **CSS Modules** — 组件样式（`.module.css`）；shadcn/ui + Radix UI，样式适配为 CSS Modules
+
+## 禁止使用
+
+- Next.js、Remix、独立 Vite SPA（无 SSR）、CRA
+- React Hook Form、Formik
+- Redux、MobX、Zustand
+- 独立 Express API 服务
+- `useEffect` + `fetch` 获取服务端数据
+- TypeScript `any`
+- 未使用变量
+- TailwindCSS（含 v3 / v4）
+
+## 数据流
+
+```
+Page → Server Function → Supabase → Response
+```
+
+- 页面通过 TanStack Query 调用 Server Functions。
+- Server Functions 完成认证、调用 Supabase、用 Zod 校验。
+- 页面组件不得直接进行客户端 Supabase 变更。
+
+## 状态优先级
+
+1. TanStack Query
+2. TanStack Store
+3. React State
+
+## 代码质量
+
+- Strict TypeScript
+- ESLint zero warnings
+- Oxlint zero warnings
+- Feature First Architecture
+
+## 界面语言
+
+- 用户可见文案默认使用**简体中文**（`zh-CN`）
+- 根 HTML 设置 `lang="zh-CN"`
+- 枚举标签等共享文案放在 `packages/shared`（如 `GENDER_LABELS`）
+- 代码、注释、提交信息保持英文
+
+## 官方文档（优先 llms.txt）
+
+TanStack 文档更新频繁，**开发前必读 llms.txt**：
+
+1. **https://tanstack.com/llms.txt** — 全站文档聚合索引（首选）
+2. https://tanstack.com/start
+3. https://tanstack.com/router
+4. https://tanstack.com/query
+5. https://tanstack.com/form
+6. https://viteplus.dev/ — Vite+ 工具链
+
+完整 PRD：`docs/prd/10-architecture.md`、`docs/prd/12-dev-standards.md`

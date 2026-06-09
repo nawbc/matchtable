@@ -1,0 +1,14 @@
+.root {
+  padding: var(--space-lg);
+}
+
+.message {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}

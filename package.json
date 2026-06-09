@@ -1,0 +1,32 @@
+{
+  "name": "matchtable",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "ready": "vp check && vp run build",
+    "dev": "vp run @matchtable/web#dev",
+    "dev:web": "vp run @matchtable/web#dev",
+    "build": "vp run --filter @matchtable/web build",
+    "preview": "vp preview apps/web",
+    "check": "vp check",
+    "check:fix": "vp check --fix",
+    "fmt": "vp fmt",
+    "lint": "vp lint --type-aware --type-check",
+    "lint:fix": "vp lint --type-aware --type-check --fix",
+    "prepare": "vp config",
+    "db:push": "supabase db push",
+    "db:link": "supabase link --project-ref hadtqnnumnyncmxhyrwv"
+  },
+  "devDependencies": {
+    "@tanstack/eslint-plugin-query": "^5.91.0",
+    "@tanstack/eslint-plugin-router": "^1.155.0",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "supabase": "^2.105.0",
+    "vite-plus": "catalog:"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "packageManager": "pnpm@11.5.2"
+}

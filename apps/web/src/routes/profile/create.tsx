@@ -1,0 +1,38 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+
+import { ProfileForm } from '~/features/profile/ProfileForm'
+import { createProfileMutationOptions } from '~/features/profile/queries'
+import { requireAuth } from '~/lib/auth-guard'
+
+export const Route = createFileRoute('/profile/create')({
+  beforeLoad: ({ context }) => requireAuth(context),
+  component: CreateProfilePage,
+})
+
+function CreateProfilePage() {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+
+  const mutation = useMutation({
+    ...createProfileMutationOptions,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['profile'] })
+      navigate({ to: '/me' })
+    },
+  })
+
+  return (
+    <div>
+      <h1 className="pageTitle">创建相亲表</h1>
+      <p className="pageSubtitle">填写你的结构化相亲资料</p>
+      <ProfileForm
+        showContact
+        submitLabel="创建资料"
+        onSubmit={async (values) => {
+          await mutation.mutateAsync(values)
+        }}
+      />
+    </div>
+  )
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@matchtable/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./supabase/*": "./src/supabase/*.ts",
+    "./mappers/*": "./src/mappers/*.ts"
+  },
+  "dependencies": {
+    "@matchtable/shared": "workspace:*",
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.49.8"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

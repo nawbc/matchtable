@@ -1,0 +1,110 @@
+---
+
+description: MatchTable UI — Editorial Luxury 设计约束
+
+globs: **/*.{tsx,css}
+
+alwaysApply: false
+
+---
+
+
+
+# MatchTable UI
+
+
+
+## 设计方向
+
+
+
+**Editorial Luxury** — Editorial、Luxury、Premium、Magazine、Minimal、Light、Elegant。
+
+
+
+视觉参考：Linear、Raycast、Stripe、Notion（均以浅色为默认）。
+
+
+
+## 禁止
+
+
+
+- 粉色婚恋风
+
+- 红娘风
+
+- 爱心泛滥 / 浪漫俗套
+
+- 传统相亲网站风格
+
+- TailwindCSS（含 v3 / v4）
+
+
+
+## 品牌组件
+
+
+
+**Table Card** 是所有用户资料的核心品牌视觉：
+
+
+
+- 发现广场列表卡片
+
+- 用户详情布局
+
+- 收藏列表
+
+- 资料预览
+
+- 资料对比页（Compare Table）
+
+
+
+结构化表格式卡片（昵称、年龄、身高、城市等）— 而非通用相亲卡片网格。
+
+
+
+**Compare Table：** 对比项列 + 可选固定「我的相亲表」列 + 横向滚动资料列；sticky 固定列、CSS Modules 实现。
+
+
+
+## 样式方案
+
+
+
+- **CSS Modules** — 组件样式（`.module.css`）；设计 token 用 CSS 自定义属性
+
+- **shadcn/ui** — 复用组件结构与 Radix 封装；样式须改写为 CSS Modules，不得使用 Tailwind 类
+
+- **Radix UI** — 无样式原语，视觉由 CSS Modules 完成
+
+
+
+## 工程要求
+
+
+
+- **Light mode default**（默认浅色模式）；深色模式可选切换
+
+- **Mobile First** 响应式布局
+
+- **Accessibility** — 键盘导航、ARIA、足够对比度
+
+- **CSS Modules** + shadcn/ui（CSS Modules 适配）+ Radix UI
+
+- **Motion** — 页面过渡、对话框、抽屉、卡片动效
+
+
+
+## SSR 页面
+
+
+
+首页、发现广场、用户详情须支持 SSR + Streaming + SEO。
+
+
+
+完整 PRD：`docs/prd/11-ui-design.md`
+

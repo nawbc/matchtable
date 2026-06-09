@@ -1,0 +1,10 @@
+{
+  "name": "@matchtable/dashboard",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo \"Dashboard app — Phase 5 placeholder\" && exit 0",
+    "build": "echo \"Dashboard app — Phase 5 placeholder\" && exit 0"
+  }
+}
