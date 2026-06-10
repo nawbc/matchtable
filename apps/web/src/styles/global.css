@@ -237,3 +237,70 @@
   font-size: 0.875rem;
   cursor: pointer;
 }
+
+.onboardingBanner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  margin-bottom: var(--space-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.onboardingBannerText {
+  margin: var(--space-xs) 0 0;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.onboardingSteps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.onboardingStep {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.onboardingStepActive {
+  color: var(--color-text);
+  border-color: var(--color-text);
+  font-weight: 500;
+}
+
+.onboardingStepIndex {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  font-size: 0.75rem;
+  border-radius: 50%;
+  background: var(--color-border);
+}
+
+.onboardingStepActive .onboardingStepIndex {
+  background: var(--color-text);
+  color: var(--color-bg);
+}
+
+.onboardingStepHint {
+  margin: calc(-1 * var(--space-sm)) 0 var(--space-lg);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}

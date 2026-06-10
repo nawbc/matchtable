@@ -1,4 +1,4 @@
-import { Button } from '@matchtable/ui'
+import { Button, TableCard } from '@matchtable/ui'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Suspense } from 'react'
 
@@ -42,21 +42,7 @@ function HomePage() {
           ) : (
             <div className="grid">
               {featured.map((profile) => (
-                <Link key={profile.id} to="/profile/$id" params={{ id: profile.id }}>
-                  <article
-                    style={{
-                      padding: 'var(--space-md)',
-                      border: '1px solid var(--color-border)',
-                      borderRadius: 'var(--radius-lg)',
-                      background: 'var(--color-surface)',
-                    }}
-                  >
-                    <strong>{profile.nickname ?? '匿名'}</strong>
-                    <p style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>
-                      {profile.city ?? '—'} · {profile.occupation ?? '—'}
-                    </p>
-                  </article>
-                </Link>
+                <TableCard key={profile.id} profile={profile} href={`/profile/${profile.id}`} />
               ))}
             </div>
           )}

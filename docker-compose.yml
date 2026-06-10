@@ -1,0 +1,23 @@
+# Example: run the web app locally in production mode.
+# Requires .env at repo root with Supabase credentials.
+#
+#   docker compose up --build web
+#
+# Dashboard: add a similar service using apps/web/Dockerfile as a template
+# (duplicate Dockerfile under apps/dashboard or override build target).
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}

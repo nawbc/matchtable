@@ -7,12 +7,23 @@ import {
   INCOME_OPTIONS,
   MARITAL_STATUS_LABELS,
   MARITAL_STATUS_OPTIONS,
+  parseRequirementsRaw,
   profileFormSchema,
+  serializeRequirements,
   type ProfileFormValues,
+  type Requirements,
 } from '@matchtable/shared'
 import { Button, Input } from '@matchtable/ui'
 import { useForm } from '@tanstack/react-form'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+
+const emptyRequirements: Requirements = {}
+
+function buildInitialRequirements(initial?: Partial<ProfileFormValues>) {
+  const parsed = parseRequirementsRaw(initial?.requirements)
+  if (parsed.kind === 'structured') return parsed.data
+  return emptyRequirements
+}
 
 const defaultValues: ProfileFormValues = {
   nickname: '',
@@ -53,12 +64,26 @@ export function ProfileForm({
 }: ProfileFormProps) {
   const [hobbyInput, setHobbyInput] = useState('')
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const initialParsed = useMemo(
+    () => parseRequirementsRaw(initialValues?.requirements),
+    [initialValues?.requirements],
+  )
+  const [isRawRequirements] = useState(initialParsed.kind === 'raw')
+  const [rawRequirements, setRawRequirements] = useState(
+    initialParsed.kind === 'raw' ? initialParsed.text : '',
+  )
+  const [requirementsFields, setRequirementsFields] = useState<Requirements>(() =>
+    buildInitialRequirements(initialValues),
+  )
 
   const form = useForm({
     defaultValues: { ...defaultValues, ...initialValues },
     onSubmit: async ({ value }) => {
       setSubmitError(null)
-      const parsed = profileFormSchema.safeParse(value)
+      const requirements = isRawRequirements
+        ? rawRequirements
+        : serializeRequirements(requirementsFields)
+      const parsed = profileFormSchema.safeParse({ ...value, requirements })
       if (!parsed.success) {
         setSubmitError(parsed.error.issues[0]?.message ?? '校验失败')
         return
@@ -321,15 +346,15 @@ export function ProfileForm({
         )}
       </form.Field>
 
-      <form.Field name="requirements">
-        {(field) => (
-          <div className="filterField">
-            <label htmlFor="requirements">择偶要求</label>
+      <div className="filterField">
+        <span className="filterFieldLabel">择偶要求</span>
+        {isRawRequirements ? (
+          <>
             <textarea
-              id="requirements"
+              id="requirements-raw"
               rows={3}
-              value={field.state.value ?? ''}
-              onChange={(e) => field.handleChange(e.target.value)}
+              value={rawRequirements}
+              onChange={(e) => setRawRequirements(e.target.value)}
               style={{
                 padding: 'var(--space-sm)',
                 border: '1px solid var(--color-border)',
@@ -337,9 +362,135 @@ export function ProfileForm({
                 fontFamily: 'inherit',
               }}
             />
-          </div>
+            <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: 4 }}>
+              无法解析为结构化格式，显示为原始文本。
+            </p>
+          </>
+        ) : (
+          <>
+            <div className="formRow">
+              <Input
+                label="年龄下限"
+                type="number"
+                value={requirementsFields.ageMin ?? ''}
+                onChange={(e) =>
+                  setRequirementsFields((prev) => ({
+                    ...prev,
+                    ageMin: e.target.value ? Number(e.target.value) : undefined,
+                  }))
+                }
+              />
+              <Input
+                label="年龄上限"
+                type="number"
+                value={requirementsFields.ageMax ?? ''}
+                onChange={(e) =>
+                  setRequirementsFields((prev) => ({
+                    ...prev,
+                    ageMax: e.target.value ? Number(e.target.value) : undefined,
+                  }))
+                }
+              />
+            </div>
+            <div className="formRow">
+              <Input
+                label="身高下限 (cm)"
+                type="number"
+                value={requirementsFields.heightMin ?? ''}
+                onChange={(e) =>
+                  setRequirementsFields((prev) => ({
+                    ...prev,
+                    heightMin: e.target.value ? Number(e.target.value) : undefined,
+                  }))
+                }
+              />
+              <Input
+                label="身高上限 (cm)"
+                type="number"
+                value={requirementsFields.heightMax ?? ''}
+                onChange={(e) =>
+                  setRequirementsFields((prev) => ({
+                    ...prev,
+                    heightMax: e.target.value ? Number(e.target.value) : undefined,
+                  }))
+                }
+              />
+            </div>
+            <div className="formRow">
+              <div className="filterField">
+                <label htmlFor="req-education">学历要求</label>
+                <select
+                  id="req-education"
+                  value={requirementsFields.education ?? ''}
+                  onChange={(e) =>
+                    setRequirementsFields((prev) => ({
+                      ...prev,
+                      education: (e.target.value || undefined) as Requirements['education'],
+                    }))
+                  }
+                >
+                  <option value="">—</option>
+                  {EDUCATION_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                      {EDUCATION_LABELS[option]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <Input
+                label="城市要求"
+                value={requirementsFields.city ?? ''}
+                onChange={(e) =>
+                  setRequirementsFields((prev) => ({
+                    ...prev,
+                    city: e.target.value || undefined,
+                  }))
+                }
+              />
+            </div>
+            <div className="filterField">
+              <label htmlFor="req-marital">婚姻状况要求</label>
+              <select
+                id="req-marital"
+                value={requirementsFields.maritalStatus ?? ''}
+                onChange={(e) =>
+                  setRequirementsFields((prev) => ({
+                    ...prev,
+                    maritalStatus: (e.target.value || undefined) as Requirements['maritalStatus'],
+                  }))
+                }
+              >
+                <option value="">—</option>
+                {MARITAL_STATUS_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {MARITAL_STATUS_LABELS[option]}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="filterField">
+              <label htmlFor="req-notes">补充说明</label>
+              <textarea
+                id="req-notes"
+                rows={3}
+                value={requirementsFields.notes ?? ''}
+                onChange={(e) =>
+                  setRequirementsFields((prev) => ({
+                    ...prev,
+                    notes: e.target.value || undefined,
+                  }))
+                }
+                style={{
+                  padding: 'var(--space-sm)',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: 'var(--radius-md)',
+                  fontFamily: 'inherit',
+                }}
+              />
+            </div>
+          </>
         )}
-      </form.Field>
+      </div>
 
       <div className="formRow">
         <form.Field name="house">

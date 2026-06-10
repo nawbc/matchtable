@@ -29,13 +29,18 @@ export type DbProfile = {
   hobbies: string[] | null
   requirements: string | null
   bio: string | null
-  wechat: string | null
-  telegram: string | null
-  line: string | null
-  email: string | null
   status: string
   created_at: string
   updated_at: string
+}
+
+export type DbProfileContact = {
+  profile_id: string
+  wechat: string | null
+  line: string | null
+  telegram: string | null
+  email: string | null
+  updated_at?: string
 }
 
 export type DbProfilePhoto = {
@@ -93,4 +98,6 @@ export function toProfileWithPhotos(row: DbProfile, photos: DbProfilePhoto[]): P
 export const PUBLIC_PROFILE_COLUMNS =
   'id, nickname, gender, birthday, avatar_url, height, weight, education, school, city, occupation, income, house, car, marital_status, accept_ldr, hobbies, requirements, bio, status, created_at, updated_at'
 
-export const FULL_PROFILE_COLUMNS = `${PUBLIC_PROFILE_COLUMNS}, user_id, wechat, telegram, line, email`
+export const FULL_PROFILE_COLUMNS = `${PUBLIC_PROFILE_COLUMNS}, user_id`
+
+export const CONTACT_COLUMNS = 'wechat, line, telegram, email'

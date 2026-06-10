@@ -1,11 +1,12 @@
 import {
   calculateAge,
   EDUCATION_LABELS,
+  formatRequirementsDisplay,
   INCOME_LABELS,
   MARITAL_STATUS_LABELS,
   type PublicProfile,
 } from '@matchtable/shared'
-import { useState } from 'react'
+import { type ReactNode, useState } from 'react'
 
 import styles from './CompareTable.module.css'
 
@@ -15,6 +16,7 @@ export type CompareColumn = {
   label?: string
   isOwn?: boolean
   onRemove?: () => void
+  actions?: ReactNode
 }
 
 export type CompareTableProps = {
@@ -95,7 +97,7 @@ const ROWS: CompareRow[] = [
   {
     key: 'requirements',
     label: '择偶要求',
-    getValue: (p) => p.requirements ?? '—',
+    getValue: (p) => formatRequirementsDisplay(p.requirements) || '—',
     longText: true,
   },
 ]
@@ -132,7 +134,11 @@ export function CompareTable({ columns, pinOwnProfile = false }: CompareTablePro
                 >
                   <div className={styles.headerCell}>
                     {col.profile.avatarUrl ? (
-                      <img src={col.profile.avatarUrl} alt="" className={styles.headerAvatar} />
+                      <img
+                        src={col.profile.avatarUrl}
+                        alt={col.profile.nickname ?? '用户照片'}
+                        className={styles.headerAvatar}
+                      />
                     ) : (
                       <div className={styles.headerAvatarPlaceholder} />
                     )}
@@ -169,6 +175,23 @@ export function CompareTable({ columns, pinOwnProfile = false }: CompareTablePro
               </tr>
             ))}
           </tbody>
+          <tfoot>
+            <tr>
+              <th className={styles.labelCol}>操作</th>
+              {columns.map((col) => (
+                <td
+                  key={col.id}
+                  className={[styles.profileCol, pinOwnProfile && col.isOwn ? styles.ownCol : '']
+                    .filter(Boolean)
+                    .join(' ')}
+                >
+                  {!col.isOwn && col.actions ? (
+                    <div className={styles.footerActions}>{col.actions}</div>
+                  ) : null}
+                </td>
+              ))}
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>

@@ -39,6 +39,20 @@ export function AppHeader() {
               我的资料
             </Link>
             <Link
+              to="/me/favorites"
+              className={styles.navLink}
+              activeProps={{ className: styles.active }}
+            >
+              收藏
+            </Link>
+            <Link
+              to="/me/requests"
+              className={styles.navLink}
+              activeProps={{ className: styles.active }}
+            >
+              牵线
+            </Link>
+            <Link
               to="/compare"
               search={{}}
               className={styles.navLink}

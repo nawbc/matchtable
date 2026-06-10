@@ -10,6 +10,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Suspense, useState } from 'react'
 
 import { listProfiles } from '~/features/profile/server'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/discover')({
   validateSearch: (search) =>
@@ -23,6 +24,14 @@ export const Route = createFileRoute('/discover')({
   loader: async ({ deps }) => {
     return listProfiles({ data: deps })
   },
+  head: () => ({
+    meta: [
+      ...seo({
+        title: '发现 — MatchTable',
+        description: '浏览结构化的相亲表资料，按性别、城市、年龄等条件筛选。',
+      }),
+    ],
+  }),
   component: DiscoverPage,
 })
 
@@ -33,7 +42,15 @@ function DiscoverPage() {
   const [localFilters, setLocalFilters] = useState(search)
 
   function applyFilters() {
-    navigate({ search: localFilters })
+    navigate({ search: { ...localFilters, page: 1 } })
+  }
+
+  const totalPages = Math.max(1, Math.ceil(data.total / data.pageSize))
+  const currentPage = data.page
+
+  function goToPage(page: number) {
+    if (page < 1 || page > totalPages) return
+    navigate({ search: { ...search, page } })
   }
 
   return (
@@ -61,6 +78,17 @@ function DiscoverPage() {
               </option>
             ))}
           </select>
+        </div>
+        <div className="filterField">
+          <label htmlFor="keyword">关键词</label>
+          <input
+            id="keyword"
+            placeholder="昵称、城市、职业、简介"
+            value={localFilters.keyword ?? ''}
+            onChange={(e) =>
+              setLocalFilters((f) => ({ ...f, keyword: e.target.value || undefined }))
+            }
+          />
         </div>
         <div className="filterField">
           <label htmlFor="city">城市</label>
@@ -178,6 +206,38 @@ function DiscoverPage() {
           </div>
         )}
       </Suspense>
+
+      {data.total > 0 ? (
+        <nav
+          className="pagination"
+          aria-label="分页"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 'var(--space-md)',
+            marginTop: 'var(--space-lg)',
+          }}
+        >
+          <button
+            type="button"
+            disabled={currentPage <= 1}
+            onClick={() => goToPage(currentPage - 1)}
+          >
+            上一页
+          </button>
+          <span style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
+            第 {currentPage} / {totalPages} 页
+          </span>
+          <button
+            type="button"
+            disabled={currentPage >= totalPages}
+            onClick={() => goToPage(currentPage + 1)}
+          >
+            下一页
+          </button>
+        </nav>
+      ) : null}
 
       <p
         style={{

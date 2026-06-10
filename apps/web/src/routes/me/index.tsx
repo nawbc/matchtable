@@ -1,3 +1,4 @@
+import { PHOTO_MIN } from '@matchtable/shared'
 import { Button, TableCard } from '@matchtable/ui'
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
@@ -30,6 +31,19 @@ function MeIndexPage() {
 
   return (
     <div>
+      {profile.status === 'hidden' ? (
+        <div className="onboardingBanner">
+          <div>
+            <strong>资料尚未发布</strong>
+            <p className="onboardingBannerText">
+              上传至少 {PHOTO_MIN} 张照片并保存资料后，即可在发现广场展示。
+            </p>
+          </div>
+          <Link to="/profile/edit" search={{ step: 'photos' }}>
+            <Button>上传照片并发布</Button>
+          </Link>
+        </div>
+      ) : null}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1 className="pageTitle">我的相亲表</h1>
         <Button variant="secondary" onClick={() => navigate({ to: '/profile/edit' })}>

@@ -37,14 +37,29 @@ function persist(state: CompareState) {
   localStorage.setItem(PIN_OWN_STORAGE_KEY, String(state.pinOwnProfile))
 }
 
-export function addToCompare(profileId: string) {
+export type AddToCompareResult = 'added' | 'already_exists' | 'max_reached' | 'login_required'
+
+export function addToCompare(
+  profileId: string,
+  options?: { isLoggedIn?: boolean },
+): AddToCompareResult {
+  if (options?.isLoggedIn === false) return 'login_required'
+
+  let result: AddToCompareResult = 'added'
   compareStore.setState((state) => {
-    if (state.profileIds.includes(profileId)) return state
-    if (state.profileIds.length >= COMPARE_MAX) return state
+    if (state.profileIds.includes(profileId)) {
+      result = 'already_exists'
+      return state
+    }
+    if (state.profileIds.length >= COMPARE_MAX) {
+      result = 'max_reached'
+      return state
+    }
     const next = { ...state, profileIds: [...state.profileIds, profileId] }
     persist(next)
     return next
   })
+  return result
 }
 
 export function removeFromCompare(profileId: string) {

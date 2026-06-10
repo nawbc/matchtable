@@ -104,6 +104,7 @@ export const discoverFiltersSchema = z.object({
   ageMin: z.coerce.number().int().min(18).max(99).optional(),
   ageMax: z.coerce.number().int().min(18).max(99).optional(),
   city: z.string().optional(),
+  keyword: z.string().max(100).optional(),
   education: z.enum(EDUCATION_OPTIONS).optional(),
   heightMin: z.coerce.number().int().min(100).max(250).optional(),
   heightMax: z.coerce.number().int().min(100).max(250).optional(),

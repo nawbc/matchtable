@@ -21,7 +21,11 @@ export function TableCard({ profile, href, compact = false, footer }: TableCardP
       <header className={styles.header}>
         <span className={styles.brand}>MatchTable</span>
         {profile.avatarUrl ? (
-          <img src={profile.avatarUrl} alt="" className={styles.avatar} />
+          <img
+            src={profile.avatarUrl}
+            alt={profile.nickname ?? '用户照片'}
+            className={styles.avatar}
+          />
         ) : (
           <div className={styles.avatarPlaceholder} aria-hidden />
         )}

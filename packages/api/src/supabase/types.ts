@@ -21,12 +21,17 @@ export type ProfilesRow = {
   hobbies: string[] | null
   requirements: string | null
   bio: string | null
-  wechat: string | null
-  telegram: string | null
-  line: string | null
-  email: string | null
   status: string
   created_at: string
+  updated_at: string
+}
+
+export type ProfileContactsRow = {
+  profile_id: string
+  wechat: string | null
+  line: string | null
+  telegram: string | null
+  email: string | null
   updated_at: string
 }
 
@@ -62,6 +67,12 @@ export type Database = {
         Row: ProfilePhotosRow
         Insert: ProfilePhotosInsert
         Update: Partial<ProfilePhotosInsert>
+        Relationships: []
+      }
+      profile_contacts: {
+        Row: ProfileContactsRow
+        Insert: Omit<ProfileContactsRow, 'updated_at'> & { updated_at?: string }
+        Update: Partial<Omit<ProfileContactsRow, 'profile_id'>>
         Relationships: []
       }
       favorites: {

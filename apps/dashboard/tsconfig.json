@@ -1,0 +1,12 @@
+{
+  "extends": "../../packages/config/tsconfig.base.json",
+  "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts"],
+  "compilerOptions": {
+    "paths": {
+      "~/*": ["./src/*"],
+      "@matchtable/shared": ["../../packages/shared/src/index.ts"],
+      "@matchtable/api": ["../../packages/api/src/index.ts"],
+      "@matchtable/ui": ["../../packages/ui/src/index.ts"]
+    }
+  }
+}

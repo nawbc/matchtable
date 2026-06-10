@@ -24,11 +24,25 @@ export const INCOME_OPTIONS = [
 ] as const
 export type Income = (typeof INCOME_OPTIONS)[number]
 
-export const PROFILE_STATUS_OPTIONS = ['active', 'hidden', 'removed'] as const
+export const PROFILE_STATUS_OPTIONS = ['active', 'hidden', 'takedown', 'deleted'] as const
 export type ProfileStatus = (typeof PROFILE_STATUS_OPTIONS)[number]
 
 export const REQUEST_STATUS_OPTIONS = ['pending', 'accepted', 'rejected', 'cancelled'] as const
 export type RequestStatus = (typeof REQUEST_STATUS_OPTIONS)[number]
+
+export const CONNECTION_REQUEST_MESSAGE_MAX = 200
+
+export const REPORT_REASON_OPTIONS = [
+  'fake_profile',
+  'advertisement',
+  'harassment',
+  'pornographic',
+  'scam',
+  'other',
+] as const
+export type ReportReason = (typeof REPORT_REASON_OPTIONS)[number]
+
+export const REPORT_DETAIL_MAX_LENGTH = 1000
 
 export const COMPARE_MIN = 2
 export const COMPARE_MAX = 4
@@ -64,4 +78,13 @@ export const INCOME_LABELS: Record<Income, string> = {
   '500k_1m': '50 万 – 100 万',
   over_1m: '100 万以上',
   prefer_not_say: '不便透露',
+}
+
+export const REPORT_REASON_LABELS: Record<ReportReason, string> = {
+  fake_profile: '虚假资料',
+  advertisement: '广告',
+  harassment: '骚扰',
+  pornographic: '色情内容',
+  scam: '诈骗',
+  other: '其他',
 }

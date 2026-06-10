@@ -7,6 +7,7 @@
     "ready": "vp check && vp run build",
     "dev": "vp run @matchtable/web#dev",
     "dev:web": "vp run @matchtable/web#dev",
+    "dev:dashboard": "vp run @matchtable/dashboard#dev",
     "build": "vp run --filter @matchtable/web build",
     "preview": "vp preview apps/web",
     "check": "vp check",

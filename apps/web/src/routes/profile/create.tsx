@@ -18,7 +18,7 @@ function CreateProfilePage() {
     ...createProfileMutationOptions,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] })
-      navigate({ to: '/me' })
+      navigate({ to: '/profile/edit', search: { step: 'photos' } })
     },
   })
 

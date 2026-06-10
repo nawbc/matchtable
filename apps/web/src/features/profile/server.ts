@@ -1,16 +1,21 @@
 import {
+  CONTACT_COLUMNS,
   FULL_PROFILE_COLUMNS,
   PUBLIC_PROFILE_COLUMNS,
   toProfilePhoto,
   toProfileWithPhotos,
   toPublicProfile,
   type DbProfile,
+  type DbProfileContact,
   type DbProfilePhoto,
 } from '@matchtable/api'
 import {
   discoverFiltersSchema,
+  PHOTO_MAX,
+  PHOTO_MIN,
   profileFormSchema,
   reorderPhotosSchema,
+  type ContactFields,
   type DiscoverFilters,
   type ProfileFormValues,
   type ProfileWithPhotos,
@@ -19,6 +24,41 @@ import {
 import { createServerFn } from '@tanstack/react-start'
 
 import { getServerSupabase, requireAuthUserId } from '~/lib/supabase-server'
+
+function formatDateOnly(date: Date): string {
+  return date.toISOString().slice(0, 10)
+}
+
+/** Latest birthday for someone at least `ageMin` years old (inclusive). */
+function maxBirthdayForMinAge(ageMin: number): string {
+  const d = new Date()
+  d.setFullYear(d.getFullYear() - ageMin)
+  return formatDateOnly(d)
+}
+
+/** Earliest birthday for someone at most `ageMax` years old (inclusive). */
+function minBirthdayForMaxAge(ageMax: number): string {
+  const d = new Date()
+  d.setFullYear(d.getFullYear() - ageMax - 1)
+  d.setDate(d.getDate() + 1)
+  return formatDateOnly(d)
+}
+
+function escapeIlikePattern(value: string): string {
+  return value.replace(/[%_\\,]/g, '\\$&')
+}
+
+async function assertMinPhotos(supabase: ReturnType<typeof getServerSupabase>, profileId: string) {
+  const { count, error } = await supabase
+    .from('profile_photos')
+    .select('*', { count: 'exact', head: true })
+    .eq('profile_id', profileId)
+
+  if (error) throw new Error(error.message)
+  if ((count ?? 0) < PHOTO_MIN) {
+    throw new Error(`请至少上传 ${PHOTO_MIN} 张照片后再发布资料`)
+  }
+}
 
 function formToDbRow(values: ProfileFormValues, userId: string) {
   return {
@@ -40,16 +80,37 @@ function formToDbRow(values: ProfileFormValues, userId: string) {
     hobbies: values.hobbies,
     bio: values.bio || null,
     requirements: values.requirements || null,
-    wechat: values.wechat || null,
-    line: values.line || null,
-    telegram: values.telegram || null,
-    email: values.email || null,
     avatar_url: null,
     status: 'active',
   }
 }
 
-function dbToFormValues(row: DbProfile): ProfileFormValues {
+function formToContactRow(profileId: string, values: ProfileFormValues) {
+  return {
+    profile_id: profileId,
+    wechat: values.wechat || null,
+    line: values.line || null,
+    telegram: values.telegram || null,
+    email: values.email || null,
+  }
+}
+
+async function upsertProfileContacts(
+  supabase: ReturnType<typeof getServerSupabase>,
+  profileId: string,
+  values: ProfileFormValues,
+) {
+  const { error } = await supabase
+    .from('profile_contacts')
+    .upsert(formToContactRow(profileId, values), { onConflict: 'profile_id' })
+
+  if (error) throw new Error(error.message)
+}
+
+function dbToFormValues(
+  row: DbProfile,
+  contact: ContactFields | null | undefined,
+): ProfileFormValues {
   return {
     nickname: row.nickname ?? '',
     gender: (row.gender as ProfileFormValues['gender']) ?? 'other',
@@ -68,10 +129,10 @@ function dbToFormValues(row: DbProfile): ProfileFormValues {
     hobbies: row.hobbies ?? [],
     bio: row.bio ?? '',
     requirements: row.requirements ?? '',
-    wechat: row.wechat ?? '',
-    line: row.line ?? '',
-    telegram: row.telegram ?? '',
-    email: row.email ?? '',
+    wechat: contact?.wechat ?? '',
+    line: contact?.line ?? '',
+    telegram: contact?.telegram ?? '',
+    email: contact?.email ?? '',
   }
 }
 
@@ -106,15 +167,21 @@ export const getMyProfile = createServerFn({ method: 'GET' }).handler(
       .eq('profile_id', profile.id)
       .order('sort_order')
 
+    const { data: contact } = await supabase
+      .from('profile_contacts')
+      .select(CONTACT_COLUMNS)
+      .eq('profile_id', profile.id)
+      .maybeSingle()
+
     const withPhotos = toProfileWithPhotos(profile as DbProfile, (photos ?? []) as DbProfilePhoto[])
-    const row = profile as DbProfile
+    const row = contact as DbProfileContact | null
     return {
       ...withPhotos,
       userId,
-      wechat: row.wechat,
-      line: row.line,
-      telegram: row.telegram,
-      email: row.email,
+      wechat: row?.wechat ?? null,
+      line: row?.line ?? null,
+      telegram: row?.telegram ?? null,
+      email: row?.email ?? null,
     }
   },
 )
@@ -124,7 +191,7 @@ export const createProfile = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
     const userId = await requireAuthUserId()
     const supabase = getServerSupabase()
-    const row = formToDbRow(data, userId)
+    const row = { ...formToDbRow(data, userId), status: 'hidden' as const }
 
     const { data: profile, error } = await supabase
       .from('profiles')
@@ -137,6 +204,8 @@ export const createProfile = createServerFn({ method: 'POST' })
       throw new Error(error.message)
     }
 
+    await upsertProfileContacts(supabase, profile.id, data)
+
     return toProfileWithPhotos(profile as DbProfile, [])
   })
 
@@ -145,6 +214,17 @@ export const updateProfile = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
     const userId = await requireAuthUserId()
     const supabase = getServerSupabase()
+
+    const { data: existing } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('user_id', userId)
+      .single()
+
+    if (!existing) throw new Error('Profile not found')
+
+    await assertMinPhotos(supabase, existing.id)
+
     const row = formToDbRow(data, userId)
 
     const { data: profile, error } = await supabase
@@ -158,6 +238,8 @@ export const updateProfile = createServerFn({ method: 'POST' })
       console.error('updateProfile error:', error.message)
       throw new Error(error.message)
     }
+
+    await upsertProfileContacts(supabase, profile.id, data)
 
     const { data: photos } = await supabase
       .from('profile_photos')
@@ -181,6 +263,16 @@ export const uploadPhoto = createServerFn({ method: 'POST' })
       .single()
 
     if (!profile) throw new Error('Create a profile first')
+
+    const { count: photoCount, error: countError } = await supabase
+      .from('profile_photos')
+      .select('*', { count: 'exact', head: true })
+      .eq('profile_id', profile.id)
+
+    if (countError) throw new Error(countError.message)
+    if ((photoCount ?? 0) >= PHOTO_MAX) {
+      throw new Error(`最多上传 ${PHOTO_MAX} 张照片`)
+    }
 
     const path = `${userId}/${Date.now()}-${data.fileName}`
     const buffer = Buffer.from(data.base64, 'base64')
@@ -226,8 +318,40 @@ export const uploadPhoto = createServerFn({ method: 'POST' })
 export const deletePhoto = createServerFn({ method: 'POST' })
   .validator((photoId: string) => photoId)
   .handler(async ({ data: photoId }) => {
-    await requireAuthUserId()
+    const userId = await requireAuthUserId()
     const supabase = getServerSupabase()
+
+    const { data: photo } = await supabase
+      .from('profile_photos')
+      .select('profile_id')
+      .eq('id', photoId)
+      .single()
+
+    if (!photo) throw new Error('Photo not found')
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('id, status')
+      .eq('user_id', userId)
+      .eq('id', photo.profile_id)
+      .single()
+
+    if (!profile) throw new Error('Unauthorized')
+
+    const { count } = await supabase
+      .from('profile_photos')
+      .select('*', { count: 'exact', head: true })
+      .eq('profile_id', profile.id)
+
+    const remaining = (count ?? 0) - 1
+    if (remaining < PHOTO_MIN && profile.status === 'active') {
+      const { error: statusError } = await supabase
+        .from('profiles')
+        .update({ status: 'hidden' })
+        .eq('id', profile.id)
+
+      if (statusError) throw new Error(statusError.message)
+    }
 
     const { error } = await supabase.from('profile_photos').delete().eq('id', photoId)
     if (error) throw new Error(error.message)
@@ -297,6 +421,14 @@ export const listProfiles = createServerFn({ method: 'GET' })
     if (filters.education) query = query.eq('education', filters.education)
     if (filters.heightMin) query = query.gte('height', filters.heightMin)
     if (filters.heightMax) query = query.lte('height', filters.heightMax)
+    if (filters.ageMin) query = query.lte('birthday', maxBirthdayForMinAge(filters.ageMin))
+    if (filters.ageMax) query = query.gte('birthday', minBirthdayForMaxAge(filters.ageMax))
+    if (filters.keyword) {
+      const pattern = `%${escapeIlikePattern(filters.keyword)}%`
+      query = query.or(
+        `nickname.ilike.${pattern},city.ilike.${pattern},occupation.ilike.${pattern},bio.ilike.${pattern}`,
+      )
+    }
 
     if (filters.sort === 'recent') {
       query = query.order('updated_at', { ascending: false })
@@ -314,21 +446,7 @@ export const listProfiles = createServerFn({ method: 'GET' })
       throw new Error(error.message)
     }
 
-    let profiles = (data ?? []).map((row) => toPublicProfile(row as DbProfile))
-
-    if (filters.ageMin || filters.ageMax) {
-      profiles = profiles.filter((p) => {
-        if (!p.birthday) return false
-        const birth = new Date(p.birthday)
-        const today = new Date()
-        let age = today.getFullYear() - birth.getFullYear()
-        const m = today.getMonth() - birth.getMonth()
-        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age -= 1
-        if (filters.ageMin && age < filters.ageMin) return false
-        if (filters.ageMax && age > filters.ageMax) return false
-        return true
-      })
-    }
+    const profiles = (data ?? []).map((row) => toPublicProfile(row as DbProfile))
 
     return {
       profiles,

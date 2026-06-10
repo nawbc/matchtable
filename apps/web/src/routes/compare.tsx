@@ -1,5 +1,5 @@
 import { COMPARE_MAX, COMPARE_MIN, compareSearchSchema } from '@matchtable/shared'
-import { CompareTable, type CompareColumn } from '@matchtable/ui'
+import { Button, CompareTable, type CompareColumn } from '@matchtable/ui'
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useStore } from '@tanstack/react-store'
@@ -11,6 +11,8 @@ import {
   togglePinOwnProfile,
 } from '~/features/compare/store'
 import { myProfileQueryOptions, profilesByIdsQueryOptions } from '~/features/profile/queries'
+import { FavoriteButton } from '~/features/social/FavoriteButton'
+import { RequestDialog } from '~/features/social/RequestDialog'
 import { requireAuth } from '~/lib/auth-guard'
 
 export const Route = createFileRoute('/compare')({
@@ -73,6 +75,17 @@ function ComparePage() {
       id: profile.id,
       profile,
       onRemove: () => removeFromCompare(profile.id),
+      actions: (
+        <>
+          <Link to="/profile/$id" params={{ id: profile.id }}>
+            <Button variant="ghost" style={{ width: '100%' }}>
+              查看详情
+            </Button>
+          </Link>
+          <FavoriteButton profileId={profile.id} />
+          <RequestDialog profileId={profile.id} triggerLabel="发起牵线" />
+        </>
+      ),
     })
   }
 
