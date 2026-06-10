@@ -1,0 +1,35 @@
+packages/ui/package.json
+  s_a73d9668baac15::t_9ae3b739690b92 16-17,20-22,25-26
+apps/dashboard/package.json
+  s_a73d9668baac15::t_560f780d9aae06 19-26,30-37
+  s_a73d9668baac15::t_8ec05da59a138d 17-18
+package.json
+  s_a73d9668baac15::t_5c85ad7354f80c 24-28
+apps/web/package.json
+  s_a73d9668baac15::t_3cf917084e5d40 19-29,33-40
+  s_a73d9668baac15::t_16bfb4645de357 17-18
+pnpm-workspace.yaml
+  s_a73d9668baac15::t_5262fa409100b5 5-11
+  s_a73d9668baac15::t_17020912cd1df2 14-16
+packages/api/package.json
+  s_a73d9668baac15::t_2752367a913c27 17-19
+  s_a73d9668baac15::t_e8a9ba7d6a6390 13
+packages/shared/package.json
+  s_a73d9668baac15::t_c8ed7260235587 13,16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "4904f19b6acd1be8a26944c4725e8ad78f310079",
+  "prompts": {},
+  "sessions": {
+    "s_a73d9668baac15": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "b3f4a92e-5718-42c6-a589-33c596c1af29",
+        "model": "default"
+      },
+      "human_author": "nawbc <wanghan9423@outlook.com>"
+    }
+  }
+}
