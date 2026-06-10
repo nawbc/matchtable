@@ -16,8 +16,9 @@
     "lint": "vp lint --type-aware --type-check",
     "lint:fix": "vp lint --type-aware --type-check --fix",
     "prepare": "vp config",
+    "db:link": "supabase link",
     "db:push": "supabase db push",
-    "db:link": "supabase link --project-ref hadtqnnumnyncmxhyrwv"
+    "db:migrations": "node scripts/list-migrations.mjs"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "5.101.0",

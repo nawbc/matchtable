@@ -48,7 +48,7 @@ Apply SQL migrations **in order** against your Supabase Postgres database:
 
 1. [`packages/database/migrations/001_initial.sql`](../packages/database/migrations/001_initial.sql) — core schema, RLS, storage bucket
 2. [`packages/database/migrations/003_admin.sql`](../packages/database/migrations/003_admin.sql) — admin RLS policies, `is_admin()` helper
-3. `packages/database/migrations/004_*.sql` — **apply when present** (not in repo yet; run after 003 if added in a future release)
+3. [`packages/database/migrations/004_contact_privacy.sql`](../packages/database/migrations/004_contact_privacy.sql) — contact privacy (`profile_contacts` table + RLS)
 
 ### How to apply
 
@@ -56,13 +56,14 @@ Apply SQL migrations **in order** against your Supabase Postgres database:
 
 ```bash
 pnpm db:link          # one-time: link to your project ref
-pnpm db:push          # pushes migrations from supabase/migrations if configured
+pnpm db:migrations    # print ordered migration paths
+pnpm db:push          # Supabase CLI push (requires supabase/migrations symlink or copy)
 ```
 
 **Option B — Supabase Dashboard:**
 
 1. **SQL Editor** → New query
-2. Paste and run each file in order (001 → 003 → 004 if it exists)
+2. Paste and run each file in order (001 → 003 → 004)
 3. Confirm no errors; verify tables and RLS in **Table Editor**
 
 **Option C — CI/CD:**
@@ -171,7 +172,7 @@ Deploy **web** and **dashboard** as separate services (different domains or subd
 ### Generic checklist
 
 1. Create a Supabase production project (or use an existing one).
-2. Apply migrations (001 → 003 → 004 if present).
+2. Apply migrations (001 → 003 → 004).
 3. Configure Auth providers and redirect URLs (see above).
 4. Set environment variables in the host.
 5. Build with `VITE_*` and server vars present.

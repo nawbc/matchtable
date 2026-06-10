@@ -94,35 +94,3 @@
   gap: var(--space-sm);
   margin-top: var(--space-md);
 }
-
-.contactList {
-  margin: var(--space-md) 0 0;
-  padding: var(--space-md);
-  background: var(--color-bg);
-  border-radius: var(--radius-md);
-  display: grid;
-  gap: var(--space-sm);
-}
-
-.contactItem {
-  display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: var(--space-sm);
-  font-size: 0.875rem;
-}
-
-.contactItem dt {
-  color: var(--color-text-muted);
-}
-
-.contactItem dd {
-  margin: 0;
-  word-break: break-all;
-}
-
-.contactLoading,
-.contactEmpty {
-  margin: var(--space-md) 0 0;
-  font-size: 0.875rem;
-  color: var(--color-text-muted);
-}

@@ -5,10 +5,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { useState } from 'react'
 
+import { ContactInfo } from './ContactInfo'
 import {
   acceptRequestMutationOptions,
   cancelRequestMutationOptions,
-  contactForUserQueryOptions,
   receivedRequestsQueryOptions,
   rejectRequestMutationOptions,
   sentRequestsQueryOptions,
@@ -23,35 +23,6 @@ const STATUS_LABELS: Record<string, string> = {
   accepted: '已接受',
   rejected: '已拒绝',
   cancelled: '已取消',
-}
-
-function ContactInfo({ targetUserId }: { targetUserId: string }) {
-  const { data: contact, isLoading, error } = useQuery(contactForUserQueryOptions(targetUserId))
-
-  if (isLoading) return <p className={styles.contactLoading}>加载联系方式…</p>
-  if (error || !contact) return null
-
-  const fields = [
-    { label: '微信', value: contact.wechat },
-    { label: 'LINE', value: contact.line },
-    { label: 'Telegram', value: contact.telegram },
-    { label: '邮箱', value: contact.email },
-  ].filter((f) => f.value)
-
-  if (fields.length === 0) {
-    return <p className={styles.contactEmpty}>对方尚未填写联系方式</p>
-  }
-
-  return (
-    <dl className={styles.contactList}>
-      {fields.map((f) => (
-        <div key={f.label} className={styles.contactItem}>
-          <dt>{f.label}</dt>
-          <dd>{f.value}</dd>
-        </div>
-      ))}
-    </dl>
-  )
 }
 
 function RequestItem({ request, tab }: { request: RequestWithProfile; tab: Tab }) {

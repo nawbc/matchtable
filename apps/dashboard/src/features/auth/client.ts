@@ -11,11 +11,14 @@ export function getBrowserSupabase() {
 
 export async function signInWithOAuth(provider: 'google' | 'apple' | 'github') {
   const supabase = getBrowserSupabase()
-  const { error } = await supabase.auth.signInWithOAuth({
+  const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
       redirectTo: `${window.location.origin}/auth/callback`,
     },
   })
   if (error) throw error
+  if (data.url) {
+    window.location.href = data.url
+  }
 }

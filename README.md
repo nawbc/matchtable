@@ -24,9 +24,10 @@ cp .env.example .env
    - `http://localhost:3000/auth/callback` (web app)
    - `http://localhost:3001/auth/callback` (admin dashboard)
    - Production URLs + `/auth/callback` for each deployed app
-4. Run migrations: `supabase db push` or apply SQL in order:
+4. Apply migrations: run SQL in order via Supabase Dashboard SQL Editor (see `pnpm db:migrations`):
    - `packages/database/migrations/001_initial.sql`
    - `packages/database/migrations/003_admin.sql`
+   - `packages/database/migrations/004_contact_privacy.sql`
 5. **Storage**: bucket `profile-photos` is created by migration (public read, auth upload to `{user_id}/`)
 6. **Admin** (dashboard): set `app_metadata.role` to `admin` on a user in Supabase Auth (Dashboard → Authentication → Users → user → Raw user meta data)
 
@@ -62,7 +63,7 @@ Config: root [`vite.config.ts`](vite.config.ts) (lint/fmt/run) + [`apps/web/vite
 See **[`docs/deploy.md`](docs/deploy.md)** for:
 
 - Environment variables (`SUPABASE_*`, `VITE_*`)
-- Migration order (`001` → `003` → `004` when present)
+- Migration order (`001` → `003` → `004`)
 - Supabase Auth providers and redirect URLs (web `:3000`, dashboard `:3001`)
 - Admin role (`app_metadata.role = admin`)
 - Build commands (`vp run @matchtable/web#build`, `vp run @matchtable/dashboard#build`)
@@ -79,17 +80,16 @@ Optional: [`apps/web/Dockerfile`](apps/web/Dockerfile) + [`docker-compose.yml`](
 
 ## Workspace structure
 
-| Path                | Purpose                                    |
-| ------------------- | ------------------------------------------ |
-| `apps/web`          | User-facing TanStack Start app             |
-| `apps/dashboard`    | Admin dashboard (users, profiles, reports) |
-| `packages/shared`   | Zod schemas, constants                     |
-| `packages/api`      | Supabase clients, Server Function helpers  |
-| `packages/database` | SQL migrations                             |
-| `packages/ui`       | TableCard, CompareTable, design tokens     |
-| `packages/config`   | Shared TypeScript / PostCSS config         |
-| `supabase/`         | Supabase CLI config                        |
-| `docs/prd/`         | Product requirements                       |
+| Path                | Purpose                                          |
+| ------------------- | ------------------------------------------------ |
+| `apps/web`          | User-facing TanStack Start app                   |
+| `apps/dashboard`    | Admin dashboard (users, profiles, reports)       |
+| `packages/shared`   | Zod schemas, constants                           |
+| `packages/api`      | Supabase clients, Server Function helpers        |
+| `packages/database` | SQL migrations (`packages/database/migrations/`) |
+| `packages/ui`       | TableCard, CompareTable, design tokens           |
+| `packages/config`   | Shared TypeScript / PostCSS config               |
+| `docs/prd/`         | Product requirements                             |
 
 ## Phase status
 
