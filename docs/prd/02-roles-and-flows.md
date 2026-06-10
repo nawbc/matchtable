@@ -57,8 +57,22 @@ related:
 | 角色 | 可访问 | 不可访问（路由守卫自动跳转） |
 |------|--------|------------------------------|
 | 访客 | `/`、`/discover`、`/profile/$id`（active 资料）、`/login`、`/register`、`/forgot-password` | `/me/*`、`/compare`、`/profile/create`、`/profile/edit` → 跳转 `/login?redirect=…` |
-| 注册用户 | 上述 + `/me/*`、`/compare`、`/profile/create`、`/profile/edit` | `/login`、`/register`、`/forgot-password` → 智能跳转（`/me` / `/profile/create` / `/profile/edit`） |
+| 注册用户 | 上述 + `/me/*`、`/compare`、`/profile/create`、`/profile/edit` | `/login`、`/register`、`/forgot-password` → 跳转 `/` |
 | 管理员（web） | 与普通注册用户相同（web 不区分 admin UI） | 同注册用户 |
+
+## 页面内容随账户状态变化
+
+路由守卫决定**能否进入**某路径；同一公开路径上，**文案与 CTA 仍须随 session / profile 状态切换**，避免已登录用户仍看到「创建账号」「注册」等访客引导。
+
+| 页面 | 访客 | 已登录（无 profile） | 已登录（hidden） | 已登录（active） |
+|------|------|----------------------|------------------|------------------|
+| `AppHeader` | 发现、登录、注册 | 发现、我的资料、收藏、牵线、对比、退出 | 同左 | 同左 |
+| `/` 首页次要 CTA | 创建账号 → `/register` | 创建资料 → `/profile/create` | 完善资料 → `/profile/edit` | 我的资料 → `/me` |
+| `/discover` | 同上次要 CTA | 同上 | 同上 | 同上 |
+| `/profile/$id`（他人） | 加入对比 → 登录；收藏/牵线 → 登录 | 加入对比、收藏、牵线、举报 | 同左 | 同左 |
+| `/profile/$id`（本人） | — | — | 编辑资料 → `/profile/edit` | 编辑资料（无收藏/牵线） |
+
+实现：`ProfileCtaButton`（`features/profile/profile-cta.tsx`）+ 根路由 `session` 与按需预取 `myProfile`。
 
 ## apps/dashboard（管理后台）
 

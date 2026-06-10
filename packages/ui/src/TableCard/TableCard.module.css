@@ -34,7 +34,6 @@
 }
 
 .brand {
-  font-family: var(--font-serif);
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -61,7 +60,6 @@
 
 .nickname {
   margin: 0 0 var(--space-sm);
-  font-family: var(--font-serif);
   font-size: 1.125rem;
   font-weight: 600;
 }

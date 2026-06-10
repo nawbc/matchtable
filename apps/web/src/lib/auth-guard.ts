@@ -3,7 +3,7 @@ import { redirect } from '@tanstack/react-router'
 import { sessionQueryOptions } from '~/features/auth/queries'
 import { myProfileQueryOptions } from '~/features/profile/queries'
 
-export type PostAuthDestination = '/me' | '/profile/create' | '/profile/edit'
+export type PostAuthDestination = '/'
 
 const GUEST_AUTH_PATHS = ['/login', '/register', '/forgot-password', '/auth/callback'] as const
 
@@ -19,12 +19,9 @@ export function isValidInternalRedirect(path: string | null | undefined): path i
 }
 
 export async function resolvePostAuthDestination(
-  queryClient: import('@tanstack/react-query').QueryClient,
+  _queryClient: import('@tanstack/react-query').QueryClient,
 ): Promise<PostAuthDestination> {
-  const profile = await queryClient.fetchQuery(myProfileQueryOptions)
-  if (!profile) return '/profile/create'
-  if (profile.status === 'hidden') return '/profile/edit'
-  return '/me'
+  return '/'
 }
 
 export async function redirectIfAuthenticated(context: {
@@ -33,8 +30,7 @@ export async function redirectIfAuthenticated(context: {
   const session = await context.queryClient.fetchQuery(sessionQueryOptions)
   if (!session) return
 
-  const destination = await resolvePostAuthDestination(context.queryClient)
-  throw redirect({ to: destination })
+  throw redirect({ to: '/' })
 }
 
 export async function requireAuth(context: {

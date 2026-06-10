@@ -10,6 +10,7 @@ import {
   parseRequirementsRaw,
   profileFormSchema,
   serializeRequirements,
+  validateRequirements,
   type ProfileFormValues,
   type Requirements,
 } from '@matchtable/shared'
@@ -91,6 +92,14 @@ export function ProfileForm({
 
   async function submitForm(value: ProfileFormValues, options?: ProfileSubmitOptions) {
     setSubmitError(null)
+    if (!isRawRequirements) {
+      const requirementsCheck = validateRequirements(requirementsFields)
+      if (!requirementsCheck.success) {
+        setSubmitError(requirementsCheck.error.issues[0]?.message ?? '择偶要求填写有误')
+        return
+      }
+    }
+
     const requirements = isRawRequirements
       ? rawRequirements
       : serializeRequirements(requirementsFields)

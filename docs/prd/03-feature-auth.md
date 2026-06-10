@@ -39,8 +39,8 @@ related:
 | 函数 | 用途 |
 |------|------|
 | `requireAuth` | 未登录 → 跳转 `/login?redirect=<当前路径>` |
-| `redirectIfAuthenticated` | 已登录 → 跳转 `resolvePostAuthDestination` 结果 |
-| `resolvePostAuthDestination` | 只读：无 profile → `/profile/create`；hidden → `/profile/edit`；否则 → `/me` |
+| `redirectIfAuthenticated` | 已登录 → 跳转 `/` |
+| `resolvePostAuthDestination` | 登录/已登录访客路由默认目的地：`/` |
 | `prefetchMyProfile` | `requireAuth` + 预取当前用户 profile |
 
 ### 登录后导航（`apps/web/src/features/auth/post-auth.ts`）
@@ -48,11 +48,18 @@ related:
 | 函数 | 用途 |
 |------|------|
 | `completeAuthSession` | 确保 profile 行存在、刷新 query，返回 post-auth 目的地 |
-| `resolveAuthNavigationDestination` | 有效 `?redirect=` 站内路径优先；否则同 `completeAuthSession` |
+| `resolveAuthNavigationDestination` | 有效 `?redirect=` 站内路径优先；否则跳转 `/` |
 
 ### 客户端 session 同步
 
 - `AuthSync`（`apps/web/src/features/auth/AuthSync.tsx`）监听 Supabase auth 状态，失效 session / profile query
+
+### 页面内容与 CTA（随账户状态）
+
+- 根路由 `beforeLoad` 注入 `session`；公开页 loader 在 `session` 存在时预取 `myProfile`
+- 访客专属路由（`/login`、`/register`、`/forgot-password`）由 `redirectIfAuthenticated` 重定向至 `/`
+- 公开页（`/`、`/discover`、`/profile/$id`）根据 session + profile 展示不同 CTA，**已登录用户不得出现「创建账号」**
+- 共享组件：`ProfileCtaButton`、`resolveProfileCta` — 见 [02-roles-and-flows.md](./02-roles-and-flows.md#页面内容随账户状态变化)
 
 ### `redirect` 回跳参数
 

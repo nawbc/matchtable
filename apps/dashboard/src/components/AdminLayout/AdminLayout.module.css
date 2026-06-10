@@ -20,7 +20,6 @@
 }
 
 .brand {
-  font-family: var(--font-serif);
   font-size: 1.125rem;
   font-weight: 600;
 }

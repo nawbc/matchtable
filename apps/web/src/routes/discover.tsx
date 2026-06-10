@@ -9,6 +9,8 @@ import { TableCard } from '@matchtable/ui'
 import { createFileRoute } from '@tanstack/react-router'
 import { Suspense, useState } from 'react'
 
+import { ProfileCtaButton } from '~/features/profile/profile-cta'
+import { myProfileQueryOptions } from '~/features/profile/queries'
 import { listProfiles } from '~/features/profile/server'
 import { seo } from '~/utils/seo'
 
@@ -21,8 +23,13 @@ export const Route = createFileRoute('/discover')({
       sort: search.sort ?? 'newest',
     }),
   loaderDeps: ({ search }) => search,
-  loader: async ({ deps }) => {
-    return listProfiles({ data: deps })
+  loader: async ({ context, deps }) => {
+    const session = context.session
+    const myProfile = session
+      ? await context.queryClient.ensureQueryData(myProfileQueryOptions)
+      : null
+    const data = await listProfiles({ data: deps })
+    return { ...data, myProfile, session }
   },
   head: () => ({
     meta: [
@@ -57,6 +64,16 @@ function DiscoverPage() {
     <div>
       <h1 className="pageTitle">发现</h1>
       <p className="pageSubtitle">浏览结构化的相亲表资料</p>
+      <div
+        style={{
+          display: 'flex',
+          gap: 'var(--space-sm)',
+          flexWrap: 'wrap',
+          marginBottom: 'var(--space-lg)',
+        }}
+      >
+        <ProfileCtaButton ssrSession={data.session} ssrProfile={data.myProfile} />
+      </div>
 
       <div className="filters">
         <div className="filterField">

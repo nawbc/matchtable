@@ -14,7 +14,6 @@
 .value {
   font-size: 2rem;
   font-weight: 600;
-  font-family: var(--font-serif);
   letter-spacing: -0.02em;
 }
 

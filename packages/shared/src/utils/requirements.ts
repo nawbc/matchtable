@@ -1,5 +1,5 @@
 import { EDUCATION_LABELS, MARITAL_STATUS_LABELS } from '../constants'
-import { requirementsSchema, type Requirements } from '../schemas/profile'
+import { requirementsLooseSchema, requirementsSchema, type Requirements } from '../schemas/profile'
 
 export type ParsedRequirements =
   | { kind: 'structured'; data: Requirements }
@@ -11,7 +11,7 @@ export function parseRequirementsRaw(raw: string | null | undefined): ParsedRequ
 
   try {
     const json: unknown = JSON.parse(raw)
-    const result = requirementsSchema.safeParse(json)
+    const result = requirementsLooseSchema.safeParse(json)
     if (result.success) {
       const hasAny = Object.values(result.data).some((value) => value !== undefined && value !== '')
       if (hasAny) return { kind: 'structured', data: result.data }
@@ -21,6 +21,10 @@ export function parseRequirementsRaw(raw: string | null | undefined): ParsedRequ
   }
 
   return { kind: 'raw', text: raw }
+}
+
+export function validateRequirements(data: Requirements) {
+  return requirementsSchema.safeParse(data)
 }
 
 export function serializeRequirements(data: Requirements): string {

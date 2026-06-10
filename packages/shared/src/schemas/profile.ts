@@ -21,6 +21,18 @@ export const requirementsSchema = z.object({
   notes: z.string().max(500).optional(),
 })
 
+/** Lenient parse for stored JSON — populates the form even when values need correction. */
+export const requirementsLooseSchema = z.object({
+  ageMin: z.coerce.number().int().optional(),
+  ageMax: z.coerce.number().int().optional(),
+  heightMin: z.coerce.number().int().optional(),
+  heightMax: z.coerce.number().int().optional(),
+  education: z.enum(EDUCATION_OPTIONS).optional(),
+  city: z.string().max(100).optional(),
+  maritalStatus: z.enum(MARITAL_STATUS_OPTIONS).optional(),
+  notes: z.string().max(500).optional(),
+})
+
 export type Requirements = z.infer<typeof requirementsSchema>
 
 export const contactSchema = z.object({

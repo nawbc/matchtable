@@ -6,17 +6,22 @@ import { Suspense } from 'react'
 
 import { sessionQueryOptions } from '~/features/auth/queries'
 import { addToCompare } from '~/features/compare/store'
+import { myProfileQueryOptions } from '~/features/profile/queries'
 import { getProfileById } from '~/features/profile/server'
+import { useMyProfile } from '~/features/profile/use-my-profile'
 import { ReportDialog } from '~/features/reports/ReportDialog'
 import { FavoriteButton } from '~/features/social/FavoriteButton'
 import { RequestDialog } from '~/features/social/RequestDialog'
 import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/profile/$id')({
-  loader: async ({ params }) => {
+  loader: async ({ context, params }) => {
     const profile = await getProfileById({ data: params.id })
     if (!profile) throw notFound()
-    return { profile }
+    const myProfile = context.session
+      ? await context.queryClient.ensureQueryData(myProfileQueryOptions)
+      : null
+    return { profile, myProfile }
   },
   head: ({ loaderData }) => {
     const nickname = loaderData?.profile.nickname ?? '匿名'
@@ -40,10 +45,12 @@ export const Route = createFileRoute('/profile/$id')({
 })
 
 function ProfileDetailPage() {
-  const { profile } = Route.useLoaderData()
+  const { profile, myProfile: ssrMyProfile } = Route.useLoaderData()
   const navigate = Route.useNavigate()
   const requirementsDisplay = formatRequirementsDisplay(profile.requirements)
   const { data: session } = useQuery(sessionQueryOptions)
+  const { profile: myProfile } = useMyProfile(ssrMyProfile)
+  const isOwnProfile = !!session && myProfile?.id === profile.id
 
   function handleAddToCompare() {
     const result = addToCompare(profile.id, { isLoggedIn: !!session })
@@ -99,16 +106,20 @@ function ProfileDetailPage() {
             </section>
           ) : null}
           <div className="actionBar">
-            {session ? (
+            {isOwnProfile ? (
+              <Link to="/profile/edit">
+                <Button>编辑资料</Button>
+              </Link>
+            ) : session ? (
               <Button onClick={handleAddToCompare}>加入对比</Button>
             ) : (
               <Link to="/login">
                 <Button variant="secondary">加入对比</Button>
               </Link>
             )}
-            <FavoriteButton profileId={profile.id} />
-            <RequestDialog profileId={profile.id} />
-            <ReportDialog profileId={profile.id} />
+            {!isOwnProfile ? <FavoriteButton profileId={profile.id} /> : null}
+            {!isOwnProfile ? <RequestDialog profileId={profile.id} /> : null}
+            {!isOwnProfile ? <ReportDialog profileId={profile.id} /> : null}
           </div>
         </div>
       </div>
