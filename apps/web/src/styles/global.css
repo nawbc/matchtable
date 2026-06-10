@@ -41,6 +41,12 @@
   max-width: 560px;
 }
 
+.formActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
 .formRow {
   display: grid;
   grid-template-columns: 1fr 1fr;

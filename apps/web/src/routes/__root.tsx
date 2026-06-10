@@ -6,12 +6,18 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { AppHeader } from '~/components/AppHeader'
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
 import { NotFound } from '~/components/NotFound'
+import { AuthSync } from '~/features/auth/AuthSync'
+import { sessionQueryOptions } from '~/features/auth/queries'
 import type { RouterContext } from '~/lib/query-client'
 import { seo } from '~/utils/seo'
 
 import globalCss from '~/styles/global.css?url'
 
 export const Route = createRootRouteWithContext<RouterContext>()({
+  beforeLoad: async ({ context }) => {
+    const session = await context.queryClient.ensureQueryData(sessionQueryOptions)
+    return { session }
+  },
   head: () => ({
     meta: [
       { charSet: 'utf-8' },
@@ -33,13 +39,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 })
 
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext()
+  const { queryClient, session } = Route.useRouteContext()
 
   return (
     <QueryClientProvider client={queryClient}>
       <RootDocument>
         <div className="appShell">
-          <AppHeader />
+          <AuthSync />
+          <AppHeader ssrSession={session ?? null} />
           <main className="main">
             <Outlet />
           </main>

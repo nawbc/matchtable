@@ -1,4 +1,5 @@
 import type { RequestWithProfile } from '@matchtable/shared'
+import { formatDateZhCN } from '@matchtable/shared'
 import { Button, TableCard } from '@matchtable/ui'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
@@ -79,7 +80,7 @@ function RequestItem({ request, tab }: { request: RequestWithProfile; tab: Tab }
           {STATUS_LABELS[request.status] ?? request.status}
         </span>
         <time className={styles.time} dateTime={request.createdAt}>
-          {new Date(request.createdAt).toLocaleDateString('zh-CN')}
+          {formatDateZhCN(request.createdAt)}
         </time>
       </div>
 

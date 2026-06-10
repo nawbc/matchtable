@@ -5,8 +5,10 @@ import { AuthMethodTabs, type AuthMethod } from '~/features/auth/components/Auth
 import { EmailRegisterForm } from '~/features/auth/components/EmailRegisterForm'
 import { OAuthButtons } from '~/features/auth/components/OAuthButtons'
 import { PhoneOtpForm } from '~/features/auth/components/PhoneOtpForm'
+import { redirectIfAuthenticated } from '~/lib/auth-guard'
 
 export const Route = createFileRoute('/register')({
+  beforeLoad: ({ context }) => redirectIfAuthenticated(context),
   component: RegisterPage,
 })
 

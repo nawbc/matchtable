@@ -10,7 +10,6 @@ export type CompareState = {
 }
 
 function loadProfileIds(): string[] {
-  if (typeof window === 'undefined') return []
   try {
     const raw = localStorage.getItem(COMPARE_STORAGE_KEY)
     if (!raw) return []
@@ -22,14 +21,24 @@ function loadProfileIds(): string[] {
 }
 
 function loadPinOwn(): boolean {
-  if (typeof window === 'undefined') return false
   return localStorage.getItem(PIN_OWN_STORAGE_KEY) === 'true'
 }
 
 export const compareStore = new Store<CompareState>({
-  profileIds: loadProfileIds(),
-  pinOwnProfile: loadPinOwn(),
+  profileIds: [],
+  pinOwnProfile: false,
 })
+
+let compareStoreHydrated = false
+
+export function hydrateCompareStore() {
+  if (typeof window === 'undefined' || compareStoreHydrated) return
+  compareStoreHydrated = true
+  compareStore.setState(() => ({
+    profileIds: loadProfileIds(),
+    pinOwnProfile: loadPinOwn(),
+  }))
+}
 
 function persist(state: CompareState) {
   if (typeof window === 'undefined') return

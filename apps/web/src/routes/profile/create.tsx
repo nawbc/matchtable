@@ -1,12 +1,18 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 
 import { ProfileForm } from '~/features/profile/ProfileForm'
 import { createProfileMutationOptions } from '~/features/profile/queries'
-import { requireAuth } from '~/lib/auth-guard'
+import { prefetchMyProfile } from '~/lib/auth-guard'
 
 export const Route = createFileRoute('/profile/create')({
-  beforeLoad: ({ context }) => requireAuth(context),
+  loader: async ({ context, location }) => {
+    const profile = await prefetchMyProfile({ ...context, location })
+    if (profile) {
+      throw redirect({ to: '/profile/edit' })
+    }
+    return null
+  },
   component: CreateProfilePage,
 })
 

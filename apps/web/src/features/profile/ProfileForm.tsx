@@ -49,10 +49,14 @@ const defaultValues: ProfileFormValues = {
   email: '',
 }
 
+export type ProfileSubmitOptions = { publish?: boolean }
+
 export type ProfileFormProps = {
   initialValues?: Partial<ProfileFormValues>
-  onSubmit: (values: ProfileFormValues) => Promise<void>
+  onSubmit: (values: ProfileFormValues, options?: ProfileSubmitOptions) => Promise<void>
   submitLabel?: string
+  publishLabel?: string
+  publishDisabled?: boolean
   showContact?: boolean
 }
 
@@ -60,6 +64,8 @@ export function ProfileForm({
   initialValues,
   onSubmit,
   submitLabel = '保存资料',
+  publishLabel,
+  publishDisabled = false,
   showContact = false,
 }: ProfileFormProps) {
   const [hobbyInput, setHobbyInput] = useState('')
@@ -79,18 +85,27 @@ export function ProfileForm({
   const form = useForm({
     defaultValues: { ...defaultValues, ...initialValues },
     onSubmit: async ({ value }) => {
-      setSubmitError(null)
-      const requirements = isRawRequirements
-        ? rawRequirements
-        : serializeRequirements(requirementsFields)
-      const parsed = profileFormSchema.safeParse({ ...value, requirements })
-      if (!parsed.success) {
-        setSubmitError(parsed.error.issues[0]?.message ?? '校验失败')
-        return
-      }
-      await onSubmit(parsed.data)
+      await submitForm(value, { publish: false })
     },
   })
+
+  async function submitForm(value: ProfileFormValues, options?: ProfileSubmitOptions) {
+    setSubmitError(null)
+    const requirements = isRawRequirements
+      ? rawRequirements
+      : serializeRequirements(requirementsFields)
+    const parsed = profileFormSchema.safeParse({ ...value, requirements })
+    if (!parsed.success) {
+      setSubmitError(parsed.error.issues[0]?.message ?? '校验失败')
+      return
+    }
+    try {
+      await onSubmit(parsed.data, options)
+    } catch (err) {
+      console.error('Profile form submit error:', err)
+      setSubmitError(err instanceof Error ? err.message : '保存失败')
+    }
+  }
 
   return (
     <form
@@ -580,12 +595,27 @@ export function ProfileForm({
         <p style={{ color: 'var(--color-danger)', fontSize: '0.875rem' }}>{submitError}</p>
       ) : null}
 
-      <form.Subscribe selector={(s) => s.isSubmitting}>
-        {(isSubmitting) => (
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? '保存中…' : submitLabel}
-          </Button>
-        )}
+      <form.Subscribe selector={(s) => [s.isSubmitting, s.values] as const}>
+        {(state) => {
+          const [isSubmitting, values] = state
+          return (
+            <div className="formActions">
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? '保存中…' : submitLabel}
+              </Button>
+              {publishLabel ? (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  disabled={isSubmitting || publishDisabled}
+                  onClick={() => submitForm(values, { publish: true })}
+                >
+                  {publishLabel}
+                </Button>
+              ) : null}
+            </div>
+          )
+        }}
       </form.Subscribe>
     </form>
   )

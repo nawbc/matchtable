@@ -209,23 +209,34 @@ export const createProfile = createServerFn({ method: 'POST' })
     return toProfileWithPhotos(profile as DbProfile, [])
   })
 
+export type UpdateProfileInput = ProfileFormValues & { publish?: boolean }
+
 export const updateProfile = createServerFn({ method: 'POST' })
-  .validator((data: ProfileFormValues) => profileFormSchema.parse(data))
-  .handler(async ({ data }) => {
+  .validator((data: UpdateProfileInput) => {
+    const { publish, ...rest } = data
+    return { publish: publish ?? false, formValues: profileFormSchema.parse(rest) }
+  })
+  .handler(async ({ data: { publish, formValues } }) => {
     const userId = await requireAuthUserId()
     const supabase = getServerSupabase()
 
     const { data: existing } = await supabase
       .from('profiles')
-      .select('id')
+      .select('id, status')
       .eq('user_id', userId)
       .single()
 
     if (!existing) throw new Error('Profile not found')
 
-    await assertMinPhotos(supabase, existing.id)
+    const willPublish = publish || existing.status === 'active'
+    if (willPublish) {
+      await assertMinPhotos(supabase, existing.id)
+    }
 
-    const row = formToDbRow(data, userId)
+    const row = {
+      ...formToDbRow(formValues, userId),
+      status: willPublish ? ('active' as const) : ('hidden' as const),
+    }
 
     const { data: profile, error } = await supabase
       .from('profiles')
@@ -239,7 +250,7 @@ export const updateProfile = createServerFn({ method: 'POST' })
       throw new Error(error.message)
     }
 
-    await upsertProfileContacts(supabase, profile.id, data)
+    await upsertProfileContacts(supabase, profile.id, formValues)
 
     const { data: photos } = await supabase
       .from('profile_photos')

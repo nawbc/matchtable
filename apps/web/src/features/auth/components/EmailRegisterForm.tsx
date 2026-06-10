@@ -7,7 +7,7 @@ import { useState } from 'react'
 
 import { signUpWithEmailPassword } from '~/features/auth/client'
 import { mapAuthError } from '~/features/auth/errors'
-import { sessionQueryOptions } from '~/features/auth/queries'
+import { completeAuthSession } from '~/features/auth/post-auth'
 
 export function EmailRegisterForm() {
   const navigate = useNavigate()
@@ -36,8 +36,8 @@ export function EmailRegisterForm() {
 
       try {
         await signUpWithEmailPassword(parsed.data.email, parsed.data.password)
-        await queryClient.invalidateQueries({ queryKey: sessionQueryOptions.queryKey })
-        navigate({ to: '/profile/create' })
+        const destination = await completeAuthSession(queryClient)
+        navigate({ to: destination })
       } catch (err) {
         console.error('Email register error:', err)
         setSubmitError(mapAuthError(err))

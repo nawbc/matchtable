@@ -12,6 +12,7 @@ import {
   reorderPhotos,
   setPrimaryPhoto,
   updateProfile,
+  type UpdateProfileInput,
   uploadPhoto,
   type ListProfilesResult,
 } from './server'
@@ -48,7 +49,7 @@ export const createProfileMutationOptions = mutationOptions({
 })
 
 export const updateProfileMutationOptions = mutationOptions({
-  mutationFn: (data: ProfileFormValues) => updateProfile({ data }),
+  mutationFn: (data: UpdateProfileInput) => updateProfile({ data }),
 })
 
 export const uploadPhotoMutationOptions = mutationOptions({

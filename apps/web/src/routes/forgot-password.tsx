@@ -6,8 +6,10 @@ import { useState } from 'react'
 
 import { sendPasswordResetEmail } from '~/features/auth/client'
 import { mapAuthError } from '~/features/auth/errors'
+import { redirectIfAuthenticated } from '~/lib/auth-guard'
 
 export const Route = createFileRoute('/forgot-password')({
+  beforeLoad: ({ context }) => redirectIfAuthenticated(context),
   component: ForgotPasswordPage,
 })
 

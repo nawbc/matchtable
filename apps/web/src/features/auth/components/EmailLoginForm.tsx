@@ -7,9 +7,13 @@ import { useState } from 'react'
 
 import { signInWithEmailPassword } from '~/features/auth/client'
 import { mapAuthError } from '~/features/auth/errors'
-import { sessionQueryOptions } from '~/features/auth/queries'
+import { resolveAuthNavigationDestination } from '~/features/auth/post-auth'
 
-export function EmailLoginForm() {
+type EmailLoginFormProps = {
+  redirect?: string
+}
+
+export function EmailLoginForm({ redirect }: EmailLoginFormProps) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -36,8 +40,8 @@ export function EmailLoginForm() {
 
       try {
         await signInWithEmailPassword(parsed.data.email, parsed.data.password)
-        await queryClient.invalidateQueries({ queryKey: sessionQueryOptions.queryKey })
-        navigate({ to: '/me' })
+        const destination = await resolveAuthNavigationDestination(queryClient, redirect)
+        navigate({ href: destination })
       } catch (err) {
         console.error('Email login error:', err)
         setSubmitError(mapAuthError(err))

@@ -55,3 +55,9 @@ export async function verifyPhoneOtp(phone: string, token: string) {
   })
   if (error) throw error
 }
+
+export async function signOutClient() {
+  const supabase = getBrowserSupabase()
+  const { error } = await supabase.auth.signOut()
+  if (error) throw error
+}

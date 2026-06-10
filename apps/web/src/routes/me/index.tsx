@@ -1,21 +1,20 @@
 import { PHOTO_MIN } from '@matchtable/shared'
 import { Button, TableCard } from '@matchtable/ui'
-import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 
-import { myProfileQueryOptions } from '~/features/profile/queries'
-import { requireAuth } from '~/lib/auth-guard'
+import { useMyProfile } from '~/features/profile/use-my-profile'
+import { prefetchMyProfile, requireAuth } from '~/lib/auth-guard'
 
 export const Route = createFileRoute('/me/')({
-  beforeLoad: ({ context }) => requireAuth(context),
+  beforeLoad: ({ context, location }) => requireAuth({ ...context, location }),
+  loader: ({ context, location }) => prefetchMyProfile({ ...context, location }),
   component: MeIndexPage,
 })
 
 function MeIndexPage() {
   const navigate = useNavigate()
-  const { data: profile, isLoading } = useQuery(myProfileQueryOptions)
-
-  if (isLoading) return <div className="skeleton" style={{ height: 400 }} />
+  const ssrProfile = Route.useLoaderData()
+  const { profile } = useMyProfile(ssrProfile)
 
   if (!profile) {
     return (

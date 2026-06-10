@@ -1,5 +1,7 @@
 import { QueryClient } from '@tanstack/react-query'
 
+import type { AuthSession } from '~/features/auth/server'
+
 export function createQueryClient() {
   return new QueryClient({
     defaultOptions: {
@@ -13,4 +15,5 @@ export function createQueryClient() {
 
 export type RouterContext = {
   queryClient: QueryClient
+  session?: AuthSession
 }

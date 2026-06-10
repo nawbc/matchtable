@@ -1,25 +1,26 @@
 import { Button } from '@matchtable/ui'
-import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { signInWithOAuth } from '~/features/auth/client'
-import { sessionQueryOptions } from '~/features/auth/queries'
 import { getAuthSession } from '~/features/auth/server'
+import { redirectIfAdminAuthenticated } from '~/lib/admin-guard'
+import type { RouterContext } from '~/lib/query-client'
 
 export const Route = createFileRoute('/login')({
   beforeLoad: async ({ context }) => {
-    const session = await context.queryClient.fetchQuery(sessionQueryOptions)
-    if (session?.user.isAdmin) {
-      throw redirect({ to: '/' })
-    }
+    return (await redirectIfAdminAuthenticated(context)) ?? {}
   },
   component: LoginPage,
 })
 
 function LoginPage() {
+  const { forbidden: routeForbidden } = Route.useRouteContext() as RouterContext & {
+    forbidden?: boolean
+  }
   const navigate = useNavigate()
   const [oauthError, setOauthError] = useState<string | null>(null)
-  const [forbidden, setForbidden] = useState(false)
+  const [forbidden, setForbidden] = useState(routeForbidden ?? false)
 
   async function handleOAuth(provider: 'google' | 'apple' | 'github') {
     try {
@@ -45,6 +46,8 @@ function LoginPage() {
     }
   }
 
+  const showForbidden = forbidden || routeForbidden
+
   return (
     <div className="authCard">
       <h1 className="pageTitle">管理员登录</h1>
@@ -66,7 +69,7 @@ function LoginPage() {
         <p style={{ color: 'var(--color-danger)', fontSize: '0.875rem' }}>{oauthError}</p>
       ) : null}
 
-      {forbidden ? (
+      {showForbidden ? (
         <p style={{ color: 'var(--color-danger)', fontSize: '0.875rem' }}>
           当前账号无管理员权限，请联系系统管理员。
         </p>

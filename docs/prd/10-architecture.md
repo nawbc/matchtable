@@ -139,8 +139,9 @@ __root.tsx
 index.tsx
 
 login.tsx
-
 register.tsx
+forgot-password.tsx
+auth/callback.tsx
 
 discover.tsx
 
@@ -157,19 +158,62 @@ me/
 compare.tsx
 ```
 
-| 路由 | 用途 | 是否需要 SSR |
-|------|------|--------------|
-| `index.tsx` | 首页 | 是 |
-| `login.tsx` | 登录 | 否 |
-| `register.tsx` | 注册 | 否 |
-| `discover.tsx` | 发现广场 | 是 |
-| `profile/create.tsx` | 创建 MatchTable | 否 |
-| `profile/edit.tsx` | 编辑 MatchTable | 否 |
-| `profile/$id.tsx` | 用户详情 | 是 |
-| `me/index.tsx` | 我的资料 | 否 |
-| `me/favorites.tsx` | 收藏列表 | 否 |
-| `me/requests.tsx` | 牵线请求 | 否 |
-| `compare.tsx` | 资料对比（多表横向对照） | 否 |
+| 路由 | 用途 | 访问级别 | 是否需要 SSR |
+|------|------|----------|--------------|
+| `index.tsx` | 首页 | 公开 | 是 |
+| `login.tsx` | 登录 | 公开（已登录反向跳转） | 否 |
+| `register.tsx` | 注册 | 公开（已登录反向跳转） | 否 |
+| `forgot-password.tsx` | 忘记密码 | 公开（已登录反向跳转） | 否 |
+| `auth/callback.tsx` | OAuth 回调 | 公开 | 否 |
+| `discover.tsx` | 发现广场 | 公开 | 是 |
+| `profile/$id.tsx` | 用户详情 | 公开 | 是 |
+| `profile/create.tsx` | 创建 MatchTable | 需登录 | 否 |
+| `profile/edit.tsx` | 编辑 MatchTable | 需登录 | 否 |
+| `me/index.tsx` | 我的资料 | 需登录 | 否 |
+| `me/favorites.tsx` | 收藏列表 | 需登录 | 否 |
+| `me/requests.tsx` | 牵线请求 | 需登录 | 否 |
+| `compare.tsx` | 资料对比 | 需登录 | 否 |
+
+### apps/dashboard 路由树
+
+```txt
+apps/dashboard/src/routes
+
+__root.tsx
+index.tsx              # 概览
+login.tsx
+auth/callback.tsx
+users/
+ ├─ index.tsx
+ └─ $id.tsx
+profiles/
+ ├─ index.tsx
+ └─ $id.tsx
+reports/
+ └─ index.tsx
+```
+
+| 路由 | 用途 | 访问级别 |
+|------|------|----------|
+| `/login`、`/auth/callback` | 管理员登录 | 公开 |
+| `/` | Dashboard 概览 | 需 admin |
+| `/users/*` | 用户管理 | 需 admin |
+| `/profiles/*` | 资料管理 | 需 admin |
+| `/reports` | 举报管理 | 需 admin |
+
+### 权限守卫模式
+
+**apps/web** — [`apps/web/src/lib/auth-guard.ts`](../../apps/web/src/lib/auth-guard.ts)
+
+- `requireAuth` — 受保护路由 `beforeLoad`
+- `redirectIfAuthenticated` — 访客 auth 路由 `beforeLoad`
+- `prefetchMyProfile` — loader 预取 + 鉴权
+- 登录后目的地 — [`apps/web/src/features/auth/post-auth.ts`](../../apps/web/src/features/auth/post-auth.ts)
+
+**apps/dashboard** — [`apps/dashboard/src/lib/admin-guard.ts`](../../apps/dashboard/src/lib/admin-guard.ts)
+
+- `requireAdminRoute` — 管理路由 `beforeLoad`
+- `redirectIfAdminAuthenticated` — 登录页反向守卫
 
 ---
 

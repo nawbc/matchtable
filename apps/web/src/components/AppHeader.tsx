@@ -1,20 +1,42 @@
 import { Button } from '@matchtable/ui'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
 
+import { signOutClient } from '~/features/auth/client'
 import { sessionQueryOptions } from '~/features/auth/queries'
+import type { AuthSession } from '~/features/auth/server'
 import { signOut } from '~/features/auth/server'
 
 import styles from './AppHeader.module.css'
 
-export function AppHeader() {
+type AppHeaderProps = {
+  ssrSession: AuthSession
+}
+
+export function AppHeader({ ssrSession }: AppHeaderProps) {
   const queryClient = useQueryClient()
-  const { data: session } = useQuery(sessionQueryOptions)
+  const [hydrated, setHydrated] = useState(false)
+
+  useEffect(() => {
+    setHydrated(true)
+  }, [])
+
+  const { data: querySession } = useQuery({
+    ...sessionQueryOptions,
+    enabled: hydrated,
+  })
+
+  const session = hydrated ? (querySession ?? null) : ssrSession
 
   const signOutMutation = useMutation({
-    mutationFn: () => signOut(),
+    mutationFn: async () => {
+      await signOutClient()
+      await signOut()
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['auth'] })
+      queryClient.invalidateQueries({ queryKey: ['profile'] })
       window.location.href = '/'
     },
   })

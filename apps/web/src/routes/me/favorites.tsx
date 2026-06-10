@@ -10,7 +10,7 @@ import { requireAuth } from '~/lib/auth-guard'
 import styles from './favorites.module.css'
 
 export const Route = createFileRoute('/me/favorites')({
-  beforeLoad: ({ context }) => requireAuth(context),
+  beforeLoad: ({ context, location }) => requireAuth({ ...context, location }),
   component: FavoritesPage,
 })
 

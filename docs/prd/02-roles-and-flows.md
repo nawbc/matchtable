@@ -48,6 +48,28 @@ related:
 - 举报管理
 - 数据统计
 
+---
+
+# 路由访问矩阵
+
+## apps/web（用户端）
+
+| 角色 | 可访问 | 不可访问（路由守卫自动跳转） |
+|------|--------|------------------------------|
+| 访客 | `/`、`/discover`、`/profile/$id`（active 资料）、`/login`、`/register`、`/forgot-password` | `/me/*`、`/compare`、`/profile/create`、`/profile/edit` → 跳转 `/login?redirect=…` |
+| 注册用户 | 上述 + `/me/*`、`/compare`、`/profile/create`、`/profile/edit` | `/login`、`/register`、`/forgot-password` → 智能跳转（`/me` / `/profile/create` / `/profile/edit`） |
+| 管理员（web） | 与普通注册用户相同（web 不区分 admin UI） | 同注册用户 |
+
+## apps/dashboard（管理后台）
+
+| 角色 | 可访问 | 不可访问 |
+|------|--------|----------|
+| 访客 | `/login`、`/auth/callback` | `/`、`/users/*`、`/profiles/*`、`/reports` → 跳转 `/login` |
+| 已登录非 admin | `/login`（显示无权限提示） | 管理路由 → 跳转 `/login` |
+| admin | 全部管理路由 | — |
+
+---
+
 # 核心业务流程
 
 ## 用户注册流程

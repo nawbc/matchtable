@@ -12,6 +12,40 @@ related:
 
 管理后台位于 monorepo 内的 `apps/dashboard` — 见 [10-architecture.md](./10-architecture.md#monorepo-structure)。
 
+## 权限与访问控制
+
+**双层防护：**
+
+1. 路由 `requireAdminRoute`（`apps/dashboard/src/lib/admin-guard.ts`）
+2. Server Function `requireAdmin()`（`apps/dashboard/src/features/admin/server.ts`）
+
+### admin 判定
+
+- Supabase Auth `app_metadata.role === 'admin'`
+- session 映射为 `session.user.isAdmin`
+
+### 路由守卫
+
+| 函数 | 用途 |
+|------|------|
+| `requireAdminRoute` | 无 session 或非 admin → 跳转 `/login` |
+| `redirectIfAdminAuthenticated` | admin 已登录访问 `/login` → 跳转 `/`；非 admin 已登录 → 返回 `{ forbidden: true }`，页面直接显示无权限 |
+
+### 公开路由
+
+- `/login`
+- `/auth/callback`
+
+### 非 admin 登录行为
+
+- OAuth 回调后若无 admin 权限，显示错误并引导回 `/login`
+- 已登录非 admin 访问 `/login`：`beforeLoad` 传入 `forbidden: true`，立即显示「无管理员权限」
+
+### 与 web 应用隔离
+
+- 独立 `apps/dashboard` 应用与 Supabase 项目配置
+- web 端不暴露 admin UI；admin 仅通过 dashboard 访问
+
 ---
 
 # Dashboard 首页

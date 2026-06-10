@@ -6,13 +6,14 @@ import { useState } from 'react'
 
 import { sendPhoneOtp, verifyPhoneOtp } from '~/features/auth/client'
 import { mapAuthError } from '~/features/auth/errors'
-import { sessionQueryOptions } from '~/features/auth/queries'
+import { resolveAuthNavigationDestination } from '~/features/auth/post-auth'
 
 type PhoneOtpFormProps = {
   mode: 'login' | 'register'
+  redirect?: string
 }
 
-export function PhoneOtpForm({ mode }: PhoneOtpFormProps) {
+export function PhoneOtpForm({ mode, redirect }: PhoneOtpFormProps) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -35,8 +36,11 @@ export function PhoneOtpForm({ mode }: PhoneOtpFormProps) {
         }
 
         await verifyPhoneOtp(value.phone, value.code)
-        await queryClient.invalidateQueries({ queryKey: sessionQueryOptions.queryKey })
-        navigate({ to: mode === 'login' ? '/me' : '/profile/create' })
+        const destination = await resolveAuthNavigationDestination(
+          queryClient,
+          mode === 'login' ? redirect : undefined,
+        )
+        navigate({ href: destination })
       } catch (err) {
         console.error('Phone OTP error:', err)
         setSubmitError(mapAuthError(err))

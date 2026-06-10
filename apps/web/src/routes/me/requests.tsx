@@ -4,7 +4,7 @@ import { RequestList } from '~/features/social/RequestList'
 import { requireAuth } from '~/lib/auth-guard'
 
 export const Route = createFileRoute('/me/requests')({
-  beforeLoad: ({ context }) => requireAuth(context),
+  beforeLoad: ({ context, location }) => requireAuth({ ...context, location }),
   component: RequestsPage,
 })
 

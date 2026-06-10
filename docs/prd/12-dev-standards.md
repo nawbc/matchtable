@@ -87,6 +87,13 @@ Cursor 生成代码时**必须**：
 - [ ] 接受牵线请求
 - [ ] 双方接受后查看联系方式
 
+## 访问控制清单
+
+- [ ] 未登录无法访问受保护页面（自动跳转 `/login?redirect=…`）
+- [ ] 已登录无法访问登录/注册/忘记密码页（自动跳转 post-auth 目的地）
+- [ ] 非 admin 无法访问 dashboard 管理页
+- [ ] 受保护 Server Function 在无 session 时返回 Unauthorized
+
 ## 管理员清单
 
 管理员能够：

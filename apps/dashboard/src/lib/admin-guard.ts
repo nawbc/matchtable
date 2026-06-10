@@ -14,3 +14,14 @@ export async function requireAdminRoute(context: {
   }
   return session
 }
+
+export async function redirectIfAdminAuthenticated(context: {
+  queryClient: import('@tanstack/react-query').QueryClient
+}): Promise<{ forbidden: true } | undefined> {
+  const session = await context.queryClient.fetchQuery(sessionQueryOptions)
+  if (!session) return undefined
+  if (session.user.isAdmin) {
+    throw redirect({ to: '/' })
+  }
+  return { forbidden: true }
+}

@@ -13,45 +13,30 @@ function getServerEnv() {
 }
 
 export type CookieStore = {
-  get: (name: string) => string | undefined
-  set: (name: string, value: string, options?: Record<string, unknown>) => void
+  getAll: () => Array<{ name: string; value: string }>
+  setAll: (
+    cookies: Array<{
+      name: string
+      value: string
+      options?: Record<string, unknown>
+    }>,
+  ) => void
 }
+
+type CookieToSet = Parameters<CookieStore['setAll']>[0][number]
 
 export function createServerClient(cookieStore: CookieStore) {
   const { url, anonKey } = getServerEnv()
   return createSupabaseServerClient<Database>(url, anonKey, {
     cookies: {
       getAll() {
-        return Object.entries(getAllCookies(cookieStore)).map(([name, value]) => ({
-          name,
-          value,
-        }))
+        return cookieStore.getAll()
       },
-      setAll(
-        cookiesToSet: Array<{
-          name: string
-          value: string
-          options?: Record<string, unknown>
-        }>,
-      ) {
-        for (const cookie of cookiesToSet) {
-          cookieStore.set(cookie.name, cookie.value, cookie.options)
-        }
+      setAll(cookiesToSet: CookieToSet[]) {
+        cookieStore.setAll(cookiesToSet)
       },
     },
   })
-}
-
-function getAllCookies(cookieStore: CookieStore): Record<string, string> {
-  const result: Record<string, string> = {}
-  const prefix = 'sb-'
-  for (let i = 0; i < 20; i++) {
-    const chunk = cookieStore.get(`${prefix}auth-token.${i}`)
-    if (chunk) result[`${prefix}auth-token.${i}`] = chunk
-  }
-  const single = cookieStore.get(`${prefix}auth-token`)
-  if (single) result[`${prefix}auth-token`] = single
-  return result
 }
 
 function parseCookieHeader(header: string | null): Record<string, string> {
@@ -68,13 +53,21 @@ function parseCookieHeader(header: string | null): Record<string, string> {
 
 export function createServerClientFromCookieHeader(cookieHeader: string | null) {
   const parsed = parseCookieHeader(cookieHeader)
-  const cookieStore: CookieStore = {
-    get: (name) => parsed[name],
-    set: (name, value) => {
-      parsed[name] = value
+
+  return createServerClient({
+    getAll() {
+      return Object.entries(parsed).map(([name, value]) => ({ name, value }))
     },
-  }
-  return createServerClient(cookieStore)
+    setAll(cookiesToSet) {
+      for (const cookie of cookiesToSet) {
+        if (cookie.value) {
+          parsed[cookie.name] = cookie.value
+        } else {
+          delete parsed[cookie.name]
+        }
+      }
+    },
+  })
 }
 
 export function createServiceClient() {

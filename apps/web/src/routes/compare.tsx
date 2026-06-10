@@ -3,10 +3,12 @@ import { Button, CompareTable, type CompareColumn } from '@matchtable/ui'
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useStore } from '@tanstack/react-store'
+import { useEffect, useState } from 'react'
 
 import {
   compareStore,
   getCompareCount,
+  hydrateCompareStore,
   removeFromCompare,
   togglePinOwnProfile,
 } from '~/features/compare/store'
@@ -17,12 +19,19 @@ import { requireAuth } from '~/lib/auth-guard'
 
 export const Route = createFileRoute('/compare')({
   validateSearch: (search) => compareSearchSchema.parse(search),
-  beforeLoad: ({ context }) => requireAuth(context),
+  beforeLoad: ({ context, location }) => requireAuth({ ...context, location }),
   component: ComparePage,
 })
 
 function ComparePage() {
   const search = Route.useSearch()
+  const [storeReady, setStoreReady] = useState(false)
+
+  useEffect(() => {
+    hydrateCompareStore()
+    setStoreReady(true)
+  }, [])
+
   const compareState = useStore(compareStore)
   const profileIds = search.ids ? search.ids.split(',').filter(Boolean) : compareState.profileIds
 
@@ -90,6 +99,10 @@ function ComparePage() {
   }
 
   const count = getCompareCount(profileIds, compareState.pinOwnProfile, !!myProfile)
+
+  if (!storeReady) {
+    return <div className="skeleton" style={{ height: 400 }} />
+  }
 
   return (
     <div>

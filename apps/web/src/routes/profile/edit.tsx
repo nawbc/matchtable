@@ -1,20 +1,20 @@
 import { PHOTO_MAX, PHOTO_MIN } from '@matchtable/shared'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { createFileRoute, Link, redirect, useNavigate } from '@tanstack/react-router'
 import { useEffect, useRef } from 'react'
 import { z } from 'zod'
 
 import { ProfileForm } from '~/features/profile/ProfileForm'
 import {
   deletePhotoMutationOptions,
-  myProfileQueryOptions,
   reorderPhotosMutationOptions,
   setPrimaryPhotoMutationOptions,
   updateProfileMutationOptions,
   uploadPhotoMutationOptions,
 } from '~/features/profile/queries'
 import { dbToFormValues } from '~/features/profile/server'
-import { requireAuth } from '~/lib/auth-guard'
+import { useMyProfile } from '~/features/profile/use-my-profile'
+import { prefetchMyProfile } from '~/lib/auth-guard'
 
 const ONBOARDING_STEPS = [
   { key: 'basic', label: '基本信息' },
@@ -36,7 +36,13 @@ const profileEditSearchSchema = z.object({
 
 export const Route = createFileRoute('/profile/edit')({
   validateSearch: (search) => profileEditSearchSchema.parse(search),
-  beforeLoad: ({ context }) => requireAuth(context),
+  loader: async ({ context, location }) => {
+    const profile = await prefetchMyProfile({ ...context, location })
+    if (!profile) {
+      throw redirect({ to: '/profile/create' })
+    }
+    return { profile }
+  },
   component: EditProfilePage,
 })
 
@@ -44,15 +50,18 @@ function EditProfilePage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { step } = Route.useSearch()
+  const { profile: ssrProfile } = Route.useLoaderData()
+  const { profile } = useMyProfile(ssrProfile)
   const photosRef = useRef<HTMLElement>(null)
   const formRef = useRef<HTMLElement>(null)
-  const { data: profile, isLoading } = useQuery(myProfileQueryOptions)
 
   const updateMutation = useMutation({
     ...updateProfileMutationOptions,
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['profile'] })
-      navigate({ to: '/me' })
+      if (variables.publish) {
+        navigate({ to: '/me' })
+      }
     },
   })
 
@@ -101,11 +110,7 @@ function EditProfilePage() {
     })
   }
 
-  if (isLoading) return <div className="skeleton" style={{ height: 400 }} />
-  if (!profile) {
-    navigate({ to: '/profile/create' })
-    return null
-  }
+  if (!profile) return <div className="skeleton" style={{ height: 400 }} />
 
   const isHidden = profile.status === 'hidden'
   const activeStep: OnboardingStep = step ?? 'basic'
@@ -224,9 +229,11 @@ function EditProfilePage() {
         <ProfileForm
           initialValues={initialValues}
           showContact
-          submitLabel={isHidden ? '发布相亲表' : '保存修改'}
-          onSubmit={async (values) => {
-            await updateMutation.mutateAsync(values)
+          submitLabel={isHidden ? '保存资料' : '保存修改'}
+          publishLabel={isHidden ? '发布相亲表' : undefined}
+          publishDisabled={profile.photos.length < PHOTO_MIN}
+          onSubmit={async (values, options) => {
+            await updateMutation.mutateAsync({ ...values, publish: options?.publish ?? false })
           }}
         />
       </section>
