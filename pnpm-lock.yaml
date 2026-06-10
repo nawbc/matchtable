@@ -4,46 +4,28 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-catalogs:
-  default:
-    '@types/node':
-      specifier: ^22
-      version: 22.19.20
-    '@types/react':
-      specifier: ^19
-      version: 19.2.17
-    '@types/react-dom':
-      specifier: ^19
-      version: 19.2.3
-    typescript:
-      specifier: ^6
-      version: 6.0.3
-    vite-plus:
-      specifier: latest
-      version: 0.1.24
-
 overrides:
-  vite: npm:@voidzero-dev/vite-plus-core@latest
-  vitest: npm:@voidzero-dev/vite-plus-test@latest
+  vite: npm:@voidzero-dev/vite-plus-core@0.1.24
+  vitest: npm:@voidzero-dev/vite-plus-test@0.1.24
 
 importers:
 
   .:
     devDependencies:
       '@tanstack/eslint-plugin-query':
-        specifier: ^5.91.0
+        specifier: 5.101.0
         version: 5.101.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
       '@tanstack/eslint-plugin-router':
-        specifier: ^1.155.0
+        specifier: 1.162.0
         version: 1.162.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
       eslint-plugin-react-hooks:
-        specifier: ^7.0.1
+        specifier: 7.1.1
         version: 7.1.1(eslint@10.4.1(jiti@2.7.0))
       supabase:
-        specifier: ^2.105.0
+        specifier: 2.105.0
         version: 2.105.0
       vite-plus:
-        specifier: 'catalog:'
+        specifier: 0.1.24
         version: 0.1.24(@types/node@22.19.20)(jiti@2.7.0)(typescript@6.0.3)(vite@8.0.16(@types/node@22.19.20)(jiti@2.7.0))
 
   apps/dashboard:
@@ -58,62 +40,62 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@supabase/ssr':
-        specifier: ^0.6.1
+        specifier: 0.6.1
         version: 0.6.1(@supabase/supabase-js@2.107.0)
       '@supabase/supabase-js':
-        specifier: ^2.49.8
+        specifier: 2.107.0
         version: 2.107.0
       '@tanstack/react-query':
-        specifier: ^5.80.7
+        specifier: 5.101.0
         version: 5.101.0(react@19.2.7)
       '@tanstack/react-router':
-        specifier: ^1.170.15
+        specifier: 1.170.15
         version: 1.170.15(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tanstack/react-router-devtools':
-        specifier: ^1.167.0
+        specifier: 1.167.0
         version: 1.167.0(@tanstack/react-router@1.170.15(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@tanstack/router-core@1.171.13)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tanstack/react-start':
-        specifier: ^1.168.25
+        specifier: 1.168.25
         version: 1.168.25(@voidzero-dev/vite-plus-core@0.1.24(@types/node@22.19.20)(jiti@2.7.0)(typescript@6.0.3))(crossws@0.4.5(srvx@0.11.16))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tanstack/react-table':
-        specifier: ^8.21.3
+        specifier: 8.21.3
         version: 8.21.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react:
-        specifier: ^19.0.0
+        specifier: 19.2.7
         version: 19.2.7
       react-dom:
-        specifier: ^19.0.0
+        specifier: 19.2.7
         version: 19.2.7(react@19.2.7)
       zod:
-        specifier: ^4.4.3
+        specifier: 4.4.3
         version: 4.4.3
     devDependencies:
       '@matchtable/config':
         specifier: workspace:*
         version: link:../../packages/config
       '@types/node':
-        specifier: 'catalog:'
+        specifier: 22.19.20
         version: 22.19.20
       '@types/react':
-        specifier: 'catalog:'
+        specifier: 19.2.17
         version: 19.2.17
       '@types/react-dom':
-        specifier: 'catalog:'
+        specifier: 19.2.3
         version: 19.2.3(@types/react@19.2.17)
       '@vitejs/plugin-react':
-        specifier: ^6.0.1
+        specifier: 6.0.2
         version: 6.0.2(@voidzero-dev/vite-plus-core@0.1.24(@types/node@22.19.20)(jiti@2.7.0)(typescript@6.0.3))
       nitro:
-        specifier: ^3.0.260311-beta
+        specifier: 3.0.260311-beta
         version: 3.0.260311-beta(@voidzero-dev/vite-plus-core@0.1.24(@types/node@22.19.20)(jiti@2.7.0)(typescript@6.0.3))(chokidar@5.0.0)(jiti@2.7.0)
       typescript:
-        specifier: 'catalog:'
+        specifier: 6.0.3
         version: 6.0.3
       vite:
-        specifier: npm:@voidzero-dev/vite-plus-core@latest
+        specifier: npm:@voidzero-dev/vite-plus-core@0.1.24
         version: '@voidzero-dev/vite-plus-core@0.1.24(@types/node@22.19.20)(jiti@2.7.0)(typescript@6.0.3)'
       vite-plus:
-        specifier: 'catalog:'
+        specifier: 0.1.24
         version: 0.1.24(@types/node@22.19.20)(@voidzero-dev/vite-plus-core@0.1.24(@types/node@22.19.20)(jiti@2.7.0)(typescript@6.0.3))(jiti@2.7.0)(typescript@6.0.3)
 
   apps/web:
@@ -128,71 +110,71 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@supabase/ssr':
-        specifier: ^0.6.1
+        specifier: 0.6.1
         version: 0.6.1(@supabase/supabase-js@2.107.0)
       '@supabase/supabase-js':
-        specifier: ^2.49.8
+        specifier: 2.107.0
         version: 2.107.0
       '@tanstack/react-form':
-        specifier: ^1.12.0
+        specifier: 1.33.0
         version: 1.33.0(@tanstack/react-start@1.168.25(@voidzero-dev/vite-plus-core@0.1.24(@types/node@22.19.20)(jiti@2.7.0)(typescript@6.0.3))(crossws@0.4.5(srvx@0.11.16))(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tanstack/react-query':
-        specifier: ^5.80.7
+        specifier: 5.101.0
         version: 5.101.0(react@19.2.7)
       '@tanstack/react-router':
-        specifier: ^1.170.15
+        specifier: 1.170.15
         version: 1.170.15(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tanstack/react-router-devtools':
-        specifier: ^1.167.0
+        specifier: 1.167.0
         version: 1.167.0(@tanstack/react-router@1.170.15(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@tanstack/router-core@1.171.13)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tanstack/react-start':
-        specifier: ^1.168.25
+        specifier: 1.168.25
         version: 1.168.25(@voidzero-dev/vite-plus-core@0.1.24(@types/node@22.19.20)(jiti@2.7.0)(typescript@6.0.3))(crossws@0.4.5(srvx@0.11.16))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tanstack/react-store':
-        specifier: ^0.7.1
-        version: 0.7.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: 0.11.0
+        version: 0.11.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tanstack/store':
-        specifier: ^0.7.1
-        version: 0.7.7
+        specifier: 0.11.0
+        version: 0.11.0
       motion:
-        specifier: ^12.16.0
+        specifier: 12.40.0
         version: 12.40.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react:
-        specifier: ^19.0.0
+        specifier: 19.2.7
         version: 19.2.7
       react-dom:
-        specifier: ^19.0.0
+        specifier: 19.2.7
         version: 19.2.7(react@19.2.7)
       zod:
-        specifier: ^4.4.3
+        specifier: 4.4.3
         version: 4.4.3
     devDependencies:
       '@matchtable/config':
         specifier: workspace:*
         version: link:../../packages/config
       '@types/node':
-        specifier: 'catalog:'
+        specifier: 22.19.20
         version: 22.19.20
       '@types/react':
-        specifier: 'catalog:'
+        specifier: 19.2.17
         version: 19.2.17
       '@types/react-dom':
-        specifier: 'catalog:'
+        specifier: 19.2.3
         version: 19.2.3(@types/react@19.2.17)
       '@vitejs/plugin-react':
-        specifier: ^6.0.1
+        specifier: 6.0.2
         version: 6.0.2(@voidzero-dev/vite-plus-core@0.1.24(@types/node@22.19.20)(jiti@2.7.0)(typescript@6.0.3))
       nitro:
-        specifier: ^3.0.260311-beta
+        specifier: 3.0.260311-beta
         version: 3.0.260311-beta(@voidzero-dev/vite-plus-core@0.1.24(@types/node@22.19.20)(jiti@2.7.0)(typescript@6.0.3))(chokidar@5.0.0)(jiti@2.7.0)
       typescript:
-        specifier: 'catalog:'
+        specifier: 6.0.3
         version: 6.0.3
       vite:
-        specifier: npm:@voidzero-dev/vite-plus-core@latest
+        specifier: npm:@voidzero-dev/vite-plus-core@0.1.24
         version: '@voidzero-dev/vite-plus-core@0.1.24(@types/node@22.19.20)(jiti@2.7.0)(typescript@6.0.3)'
       vite-plus:
-        specifier: 'catalog:'
+        specifier: 0.1.24
         version: 0.1.24(@types/node@22.19.20)(@voidzero-dev/vite-plus-core@0.1.24(@types/node@22.19.20)(jiti@2.7.0)(typescript@6.0.3))(jiti@2.7.0)(typescript@6.0.3)
 
   packages/api:
@@ -201,20 +183,20 @@ importers:
         specifier: workspace:*
         version: link:../shared
       '@supabase/ssr':
-        specifier: ^0.6.1
+        specifier: 0.6.1
         version: 0.6.1(@supabase/supabase-js@2.107.0)
       '@supabase/supabase-js':
-        specifier: ^2.49.8
+        specifier: 2.107.0
         version: 2.107.0
     devDependencies:
       '@types/node':
-        specifier: 'catalog:'
+        specifier: 22.19.20
         version: 22.19.20
       typescript:
-        specifier: 'catalog:'
+        specifier: 6.0.3
         version: 6.0.3
       vite:
-        specifier: npm:@voidzero-dev/vite-plus-core@latest
+        specifier: npm:@voidzero-dev/vite-plus-core@0.1.24
         version: '@voidzero-dev/vite-plus-core@0.1.24(@types/node@22.19.20)(jiti@2.7.0)(typescript@6.0.3)'
 
   packages/config: {}
@@ -224,11 +206,11 @@ importers:
   packages/shared:
     dependencies:
       zod:
-        specifier: ^4.4.3
+        specifier: 4.4.3
         version: 4.4.3
     devDependencies:
       typescript:
-        specifier: 'catalog:'
+        specifier: 6.0.3
         version: 6.0.3
 
   packages/ui:
@@ -237,26 +219,26 @@ importers:
         specifier: workspace:*
         version: link:../shared
       '@radix-ui/react-slot':
-        specifier: ^1.2.3
+        specifier: 1.2.5
         version: 1.2.5(@types/react@19.2.17)(react@19.2.7)
       motion:
-        specifier: ^12.16.0
+        specifier: 12.40.0
         version: 12.40.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react:
-        specifier: ^19.0.0
+        specifier: 19.2.7
         version: 19.2.7
       react-dom:
-        specifier: ^19.0.0
+        specifier: 19.2.7
         version: 19.2.7(react@19.2.7)
     devDependencies:
       '@types/react':
-        specifier: 'catalog:'
+        specifier: 19.2.17
         version: 19.2.17
       typescript:
-        specifier: 'catalog:'
+        specifier: 6.0.3
         version: 6.0.3
       vite:
-        specifier: npm:@voidzero-dev/vite-plus-core@latest
+        specifier: npm:@voidzero-dev/vite-plus-core@0.1.24
         version: '@voidzero-dev/vite-plus-core@0.1.24(@types/node@22.19.20)(jiti@2.7.0)(typescript@6.0.3)'
 
 packages:
@@ -1130,12 +1112,6 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@tanstack/react-store@0.7.7':
-    resolution: {integrity: sha512-qqT0ufegFRDGSof9D/VqaZgjNgp4tRPHZIJq2+QIHkMUtHjaJ0lYrrXjeIUJvjnTbgPfSD1XgOMEt0lmANn6Zg==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
   '@tanstack/react-store@0.9.3':
     resolution: {integrity: sha512-y2iHd/N9OkoQbFJLUX1T9vbc2O9tjH0pQRgTcx1/Nz4IlwLvkgpuglXUx+mXt0g5ZDFrEeDnONPqkbfxXJKwRg==}
     peerDependencies:
@@ -1222,9 +1198,6 @@ packages:
 
   '@tanstack/store@0.11.0':
     resolution: {integrity: sha512-WlzzCt3xi0G6pCAJu1U+2jiECwabETDpQDi3hfkFZvJii9AuZqEKbOiVarX1/bWhTNjU486yQtJCCasi/0q+Cw==}
-
-  '@tanstack/store@0.7.7':
-    resolution: {integrity: sha512-xa6pTan1bcaqYDS9BDpSiS63qa6EoDkPN9RsRaxHuDdVDNntzq3xNwR5YKTU/V3SkSyC9T4YVOPh2zRQN0nhIQ==}
 
   '@tanstack/store@0.9.3':
     resolution: {integrity: sha512-8reSzl/qGWGGVKhBoxXPMWzATSbZLZFWhwBAFO9NAyp0TxzfBP0mIrGb8CP8KrQTmvzXlR/vFPPUrHTLBGyFyw==}
@@ -3074,13 +3047,6 @@ snapshots:
       react-dom: 19.2.7(react@19.2.7)
       use-sync-external-store: 1.6.0(react@19.2.7)
 
-  '@tanstack/react-store@0.7.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
-    dependencies:
-      '@tanstack/store': 0.7.7
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
-      use-sync-external-store: 1.6.0(react@19.2.7)
-
   '@tanstack/react-store@0.9.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@tanstack/store': 0.9.3
@@ -3209,8 +3175,6 @@ snapshots:
       '@tanstack/router-core': 1.171.13
 
   '@tanstack/store@0.11.0': {}
-
-  '@tanstack/store@0.7.7': {}
 
   '@tanstack/store@0.9.3': {}
 

@@ -1,30 +1,44 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact from '@vitejs/plugin-react'
 import { nitro } from 'nitro/vite'
-import { defineConfig } from 'vite-plus'
+import { defineConfig, loadEnv } from 'vite-plus'
 
-export default defineConfig({
-  server: {
-    port: 3001,
-  },
+const envDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 
-  resolve: {
-    tsconfigPaths: true,
-  },
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, envDir, '')
+  for (const [key, value] of Object.entries(env)) {
+    process.env[key] ??= value
+  }
 
-  css: {
-    modules: {
-      localsConvention: 'camelCaseOnly',
+  return {
+    envDir,
+
+    server: {
+      port: 3001,
     },
-  },
 
-  plugins: [
-    tanstackStart({
-      srcDirectory: 'src',
-    }),
-    nitro({
-      traceDeps: ['react', 'react-dom'],
-    }),
-    viteReact(),
-  ],
+    resolve: {
+      tsconfigPaths: true,
+    },
+
+    css: {
+      modules: {
+        localsConvention: 'camelCaseOnly',
+      },
+    },
+
+    plugins: [
+      tanstackStart({
+        srcDirectory: 'src',
+      }),
+      nitro({
+        traceDeps: ['react', 'react-dom'],
+      }),
+      viteReact(),
+    ],
+  }
 })

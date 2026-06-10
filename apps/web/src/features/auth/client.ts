@@ -20,6 +20,26 @@ export async function signInWithOAuth(provider: 'google' | 'apple' | 'github') {
   if (error) throw error
 }
 
+export async function signInWithEmailPassword(email: string, password: string) {
+  const supabase = getBrowserSupabase()
+  const { error } = await supabase.auth.signInWithPassword({ email, password })
+  if (error) throw error
+}
+
+export async function signUpWithEmailPassword(email: string, password: string) {
+  const supabase = getBrowserSupabase()
+  const { error } = await supabase.auth.signUp({ email, password })
+  if (error) throw error
+}
+
+export async function sendPasswordResetEmail(email: string) {
+  const supabase = getBrowserSupabase()
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/auth/callback`,
+  })
+  if (error) throw error
+}
+
 export async function sendPhoneOtp(phone: string) {
   const supabase = getBrowserSupabase()
   const { error } = await supabase.auth.signInWithOtp({ phone })

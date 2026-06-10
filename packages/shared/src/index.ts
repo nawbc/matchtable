@@ -1,4 +1,5 @@
 export * from './constants'
+export * from './schemas/auth'
 export * from './schemas/profile'
 export * from './schemas/social'
 export * from './schemas/report'

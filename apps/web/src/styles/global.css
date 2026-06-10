@@ -123,11 +123,114 @@
   box-shadow: var(--shadow-md);
 }
 
+.authHeader {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+.authMethodTabs {
+  display: flex;
+  gap: var(--space-xs);
+  padding: 4px;
+  margin-bottom: var(--space-lg);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.authMethodTab {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    box-shadow 0.15s;
+}
+
+.authMethodTab:hover {
+  color: var(--color-text);
+}
+
+.authMethodTabActive {
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 500;
+  box-shadow: var(--shadow-sm);
+}
+
+.authFormStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.authForgotRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: calc(-1 * var(--space-sm));
+}
+
+.authInlineLink {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.authInlineLink:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.authError {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-danger);
+}
+
+.authFooterLink {
+  margin-top: var(--space-lg);
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.authNotice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
 .oauthButtons {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
   margin-bottom: var(--space-lg);
+}
+
+.oauthGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+}
+
+.oauthGrid button {
+  padding-left: var(--space-sm);
+  padding-right: var(--space-sm);
+  font-size: 0.8125rem;
 }
 
 .divider {
