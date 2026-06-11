@@ -2,10 +2,6 @@ import { defineConfig } from 'vite-plus'
 
 // https://viteplus.dev/config/
 export default defineConfig({
-  staged: {
-    'xxx':'xxxx'
-  },
-
   run: {
     cache: true,
   },
