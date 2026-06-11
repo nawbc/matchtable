@@ -1,6 +1,18 @@
 import { createBrowserClient } from '@matchtable/api'
 
+import { mapAuthError } from './errors'
+
 let browserClient: ReturnType<typeof createBrowserClient> | null = null
+
+export type OAuthProvider = 'google' | 'apple' | 'github'
+
+export const OAUTH_PROVIDERS = [
+  { id: 'google' as const, label: 'Google' },
+  { id: 'apple' as const, label: 'Apple' },
+  { id: 'github' as const, label: 'GitHub' },
+] as const
+
+export const formatAuthError = mapAuthError
 
 export function getBrowserSupabase() {
   if (!browserClient) {
@@ -26,10 +38,19 @@ export async function signInWithEmailPassword(email: string, password: string) {
   if (error) throw error
 }
 
+export const signInWithEmail = signInWithEmailPassword
+
 export async function signUpWithEmailPassword(email: string, password: string) {
   const supabase = getBrowserSupabase()
   const { error } = await supabase.auth.signUp({ email, password })
   if (error) throw error
+}
+
+export async function signUpWithEmail(email: string, password: string) {
+  const supabase = getBrowserSupabase()
+  const { data, error } = await supabase.auth.signUp({ email, password })
+  if (error) throw error
+  return data
 }
 
 export async function sendPasswordResetEmail(email: string) {

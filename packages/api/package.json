@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "@matchtable/shared": "workspace:*",
-    "@supabase/ssr": "0.6.1",
-    "@supabase/supabase-js": "2.107.0"
+    "@supabase/ssr": "0.12.0",
+    "@supabase/supabase-js": "2.108.1"
   },
   "devDependencies": {
-    "@types/node": "22.19.20",
+    "@types/node": "22.19.21",
     "typescript": "6.0.3",
     "vite": "npm:@voidzero-dev/vite-plus-core@0.1.24"
   }
