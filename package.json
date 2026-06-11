@@ -15,7 +15,6 @@
     "fmt": "vp fmt",
     "lint": "vp lint --type-aware --type-check",
     "lint:fix": "vp lint --type-aware --type-check --fix",
-    "prepare": "vp config",
     "db:link": "supabase link",
     "db:push": "supabase db push",
     "db:migrations": "node scripts/list-migrations.mjs"

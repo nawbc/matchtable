@@ -1,0 +1,20 @@
+.root {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fixed {
+  position: fixed;
+  z-index: -1;
+}
+
+.svg {
+  width: max(2560px, 100vw);
+  height: auto;
+  opacity: 0.5;
+}

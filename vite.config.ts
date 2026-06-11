@@ -3,7 +3,7 @@ import { defineConfig } from 'vite-plus'
 // https://viteplus.dev/config/
 export default defineConfig({
   staged: {
-    '*.{js,ts,tsx,css}': 'vp check --fix',
+    'xxx':'xxxx'
   },
 
   run: {
