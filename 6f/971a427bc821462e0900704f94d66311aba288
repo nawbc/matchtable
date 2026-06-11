@@ -1,0 +1,56 @@
+scripts/list-migrations.mjs
+  s_85d1ba91183923::t_a12dc9db56fc1c 1-20
+README.md
+  s_85d1ba91183923::t_d3137f92db7f65 30
+  s_85d1ba91183923::t_0d12926d1705a3 66
+  s_85d1ba91183923::t_bef898d1745181 89
+package.json
+  s_85d1ba91183923::t_177a1a51967248 19,21
+  s_a73d9668baac15::t_5c85ad7354f80c 24-28
+apps/web/src/features/auth/AuthPanel.module.css
+  s_a73d9668baac15::t_52aedfa03e7249 1-153
+apps/dashboard/src/features/auth/client.ts
+  s_a73d9668baac15::t_65f3fb01b502bf 14,21-23
+apps/web/src/features/auth/AuthPanel.tsx
+  s_a73d9668baac15::t_19eebae236b39a 1-6,9-18,21-337
+  s_a73d9668baac15::t_37259aebc1a0a8 7-8,19-20
+apps/web/src/features/social/ContactInfo.module.css
+  s_85d1ba91183923::t_2d044c91abdc53 1-40
+docs/deploy.md
+  s_85d1ba91183923::t_8997c8f3c0758b 51
+  s_85d1ba91183923::t_45f48c404accd6 59-60
+  s_85d1ba91183923::t_84186ad420fc3f 66
+  s_85d1ba91183923::t_82114624af8af9 175
+docs/prd/12-dev-standards.md
+  s_85d1ba91183923::t_f43cbe0f746ad1 73-75,80-91,104-107,111-122
+apps/web/src/features/social/ContactInfo.tsx
+  s_85d1ba91183923::t_5c861132205515 1-38
+.env.example
+  s_85d1ba91183923::t_d5572dc4a30242 4-7,18,21-23
+packages/database/README.md
+  s_85d1ba91183923::t_9a876a732c0976 1-7,9-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "6f971a427bc821462e0900704f94d66311aba288",
+  "prompts": {},
+  "sessions": {
+    "s_85d1ba91183923": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "1722d9a5-c25e-4f8f-b07c-8a0d8022cb9d",
+        "model": "default"
+      },
+      "human_author": "nawbc <wanghan9423@outlook.com>"
+    },
+    "s_a73d9668baac15": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "b3f4a92e-5718-42c6-a589-33c596c1af29",
+        "model": "default"
+      },
+      "human_author": "nawbc <wanghan9423@outlook.com>"
+    }
+  }
+}
