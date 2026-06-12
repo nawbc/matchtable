@@ -1,0 +1,17 @@
+/* ThemesHeroLayout showcase — matches Radix site .ThemesHeroLayoutShowcase .rt-Card */
+.hero {
+  box-shadow: inset var(--shadow-4);
+  --backdrop-filter-panel: none;
+  --base-card-surface-box-shadow: none;
+  --card-background-color: var(--hero-card-background-color);
+  --card-padding: var(--space-3);
+  --card-border-radius: var(--radius-4);
+}
+
+.header {
+  margin-bottom: var(--space-md);
+}
+
+.footer {
+  margin-top: var(--space-lg);
+}

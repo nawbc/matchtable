@@ -1,29 +1,27 @@
-import type { InputHTMLAttributes } from 'react'
+import { Box, Text, TextField } from '@radix-ui/themes'
+import type { ComponentProps } from 'react'
 
-import styles from './Input.module.css'
-
-export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
+export type InputProps = Omit<ComponentProps<typeof TextField.Root>, 'size' | 'variant'> & {
   label?: string
   error?: string
 }
 
 export function Input({ label, error, className, id, ...props }: InputProps) {
   const inputId = id ?? label?.toLowerCase().replace(/\s+/g, '-')
+
   return (
-    <div className={styles.field}>
+    <Box>
       {label ? (
-        <label htmlFor={inputId} className={styles.label}>
-          {label}
-        </label>
+        <Text asChild size="1" weight="medium" mb="1">
+          <label htmlFor={inputId}>{label}</label>
+        </Text>
       ) : null}
-      <input
-        id={inputId}
-        className={[styles.input, error ? styles.hasError : '', className ?? '']
-          .filter(Boolean)
-          .join(' ')}
-        {...props}
-      />
-      {error ? <span className={styles.error}>{error}</span> : null}
-    </div>
+      <TextField.Root id={inputId} size="2" variant="soft" className={className} {...props} />
+      {error ? (
+        <Text size="1" color="red" mt="1">
+          {error}
+        </Text>
+      ) : null}
+    </Box>
   )
 }

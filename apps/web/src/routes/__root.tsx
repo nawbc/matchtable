@@ -1,3 +1,4 @@
+import { MatchTableTheme } from '@matchtable/ui'
 import { QueryClientProvider } from '@tanstack/react-query'
 /// <reference types="vite/client" />
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from '@tanstack/react-router'
@@ -5,6 +6,7 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 import { AppHeader } from '~/components/AppHeader'
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
+import { HeroBackground } from '~/components/HeroBackground'
 import { NotFound } from '~/components/NotFound'
 import { AuthSync } from '~/features/auth/AuthSync'
 import { sessionQueryOptions } from '~/features/auth/queries'
@@ -29,6 +31,10 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     ],
     links: [
       { rel: 'stylesheet', href: globalCss },
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap',
+      },
       { rel: 'manifest', href: '/site.webmanifest', color: '#ffffff' },
       { rel: 'icon', href: '/favicon.ico' },
     ],
@@ -44,13 +50,17 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <RootDocument>
-        <div className="appShell">
-          <AuthSync />
-          <AppHeader ssrSession={session ?? null} />
-          <main className="main">
-            <Outlet />
-          </main>
-        </div>
+        <MatchTableTheme>
+          <div className="appShell">
+            {/* Global fixed mesh background for every route — keep in root, not per-page. */}
+            <HeroBackground fixed />
+            <AuthSync />
+            <AppHeader ssrSession={session ?? null} />
+            <main className="main">
+              <Outlet />
+            </main>
+          </div>
+        </MatchTableTheme>
       </RootDocument>
     </QueryClientProvider>
   )

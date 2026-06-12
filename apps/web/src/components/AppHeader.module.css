@@ -1,10 +1,15 @@
+/* Translucent header over global mesh background (not solid --color-surface). */
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: var(--space-md) var(--space-lg);
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-surface);
+  border-bottom: 1px solid rgba(45, 164, 140, 0.12);
+  background: rgba(244, 247, 245, 0.78);
+  backdrop-filter: blur(10px);
 }
 
 .logo {

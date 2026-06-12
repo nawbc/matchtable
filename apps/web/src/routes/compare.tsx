@@ -5,6 +5,7 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { useStore } from '@tanstack/react-store'
 import { useEffect, useState } from 'react'
 
+import { PageHeader } from '~/components/PageHeader'
 import {
   compareStore,
   getCompareCount,
@@ -106,10 +107,7 @@ function ComparePage() {
 
   return (
     <div>
-      <h1 className="pageTitle">资料对比</h1>
-      <p className="pageSubtitle">
-        横向对比 {COMPARE_MIN}–{COMPARE_MAX} 份相亲表
-      </p>
+      <PageHeader title="资料对比" subtitle={`横向对比 ${COMPARE_MIN}–${COMPARE_MAX} 份相亲表`} />
 
       <div className="compareControls">
         <label className="checkboxLabel">

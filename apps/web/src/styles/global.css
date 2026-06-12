@@ -1,17 +1,49 @@
+@import '@matchtable/ui/styles/radix-themes.css';
 @import '@matchtable/ui/styles/tokens.css';
+@import './radix-showcase.css';
 
+/* Layering for global HeroBackground (fixed, z-index 0): shell isolates; main/header sit above. */
 .appShell {
+  position: relative;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  isolation: isolate;
 }
 
 .main {
+  position: relative;
+  z-index: 1;
   flex: 1;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--space-lg) var(--space-md);
+}
+
+/* Home hero: cancel .main side padding; inner .content keeps max-width. */
+.homeHeroBleed {
+  margin-top: calc(-1 * var(--space-lg));
+  margin-left: calc(-1 * var(--space-md));
+  margin-right: calc(-1 * var(--space-md));
+}
+
+.homeFeatured {
+  margin-top: var(--space-2xl);
+}
+
+.homeFeaturedTitle {
+  margin: 0 0 var(--space-sm);
+  font-size: 1.375rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.homeFeaturedDesc {
+  margin: 0 0 var(--space-lg);
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
 }
 
 .pageTitle {
@@ -86,15 +118,30 @@
   color: var(--color-text-muted);
 }
 
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+.paginationMeta {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.resultMeta {
+  margin-top: var(--space-lg);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-md);
   margin-bottom: var(--space-lg);
-  padding: var(--space-md);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
 }
 
 .filterField {
@@ -105,75 +152,56 @@
 }
 
 .filterField label {
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text);
 }
 
 .filterField select,
 .filterField input {
-  padding: var(--space-sm);
-  border: 1px solid var(--color-border);
+  padding: var(--space-sm) var(--space-md);
+  border: none;
   border-radius: var(--radius-md);
-  background: var(--color-surface);
+  background: var(--color-surface-soft);
   font-size: 0.875rem;
+  color: var(--color-text);
+}
+
+.filterField select:focus,
+.filterField input:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--color-border-strong);
+}
+
+.filterActions {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-sm);
 }
 
 .authCard {
-  max-width: 400px;
+  width: min(100%, 420px);
   margin: var(--space-2xl) auto;
-  padding: var(--space-xl);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  padding-inline: var(--space-md);
+  box-sizing: border-box;
+}
+
+.authCardSurface {
+  width: 100%;
+  --base-card-padding-left: var(--space-6);
+  --base-card-padding-right: var(--space-6);
 }
 
 .authHeader {
   text-align: center;
-  margin-bottom: var(--space-lg);
-}
-
-.authMethodTabs {
-  display: flex;
-  gap: var(--space-xs);
-  padding: 4px;
-  margin-bottom: var(--space-lg);
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-}
-
-.authMethodTab {
-  flex: 1;
-  padding: var(--space-sm) var(--space-md);
-  border: none;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--color-text-muted);
-  font-size: 0.875rem;
-  font-family: inherit;
-  cursor: pointer;
-  transition:
-    background 0.15s,
-    color 0.15s,
-    box-shadow 0.15s;
-}
-
-.authMethodTab:hover {
-  color: var(--color-text);
-}
-
-.authMethodTabActive {
-  background: var(--color-surface);
-  color: var(--color-text);
-  font-weight: 500;
-  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-md);
 }
 
 .authFormStack {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
+  width: 100%;
 }
 
 .authForgotRow {
@@ -200,7 +228,7 @@
 }
 
 .authFooterLink {
-  margin-top: var(--space-lg);
+  margin-top: var(--space-md);
   text-align: center;
   font-size: 0.875rem;
   color: var(--color-text-muted);
@@ -230,6 +258,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-sm);
+  width: 100%;
 }
 
 .oauthGrid button {

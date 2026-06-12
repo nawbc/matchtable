@@ -1,5 +1,5 @@
 import { emailLoginSchema, emailRegisterSchema } from '@matchtable/shared'
-import { Button, Input } from '@matchtable/ui'
+import { Button, Card, Input } from '@matchtable/ui'
 import { useForm } from '@tanstack/react-form'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
@@ -160,9 +160,9 @@ export function AuthPanel({ mode }: AuthPanelProps) {
   }
 
   return (
-    <div className={styles.authCard}>
-      <h1 className="pageTitle">{copy.title}</h1>
-      <p className="pageSubtitle">{copy.subtitle}</p>
+    <Card className={styles.authCard}>
+      <h1 className={styles.title}>{copy.title}</h1>
+      <p className={styles.subtitle}>{copy.subtitle}</p>
 
       <div className={styles.methodTabs} role="tablist" aria-label="登录方式">
         <button
@@ -332,6 +332,6 @@ export function AuthPanel({ mode }: AuthPanelProps) {
         {copy.footer}
         <Link to={copy.footerTo}>{copy.footerLink}</Link>
       </p>
-    </div>
+    </Card>
   )
 }

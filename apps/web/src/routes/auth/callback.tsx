@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect, useRef, useState } from 'react'
 
+import { loadAuthCallback } from '~/features/auth/callback-loader'
 import { getBrowserSupabase } from '~/features/auth/client'
 import {
   AUTH_REDIRECT_STORAGE_KEY,
@@ -9,39 +10,29 @@ import {
 } from '~/features/auth/post-auth'
 
 export const Route = createFileRoute('/auth/callback')({
+  loader: () => loadAuthCallback(),
   component: AuthCallbackPage,
 })
 
 function AuthCallbackPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const { exchangeError, codePresent } = Route.useLoaderData()
+  const [errorMessage, setErrorMessage] = useState<string | null>(exchangeError)
   const handledRef = useRef(false)
 
   useEffect(() => {
     if (handledRef.current) return
     handledRef.current = true
 
-    async function handleCallback() {
-      const supabase = getBrowserSupabase()
-      const params = new URLSearchParams(window.location.search)
-      const errorDescription = params.get('error_description')
-
-      if (errorDescription) {
-        console.error('Auth callback provider error:', errorDescription)
-        setErrorMessage(errorDescription)
+    async function finishAuth() {
+      if (exchangeError) {
+        setErrorMessage(exchangeError)
         return
       }
 
-      const code = params.get('code')
-      if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code)
-        if (error) {
-          console.error('Auth callback error:', error.message)
-          setErrorMessage(error.message)
-          return
-        }
-      } else {
+      if (!codePresent) {
+        const supabase = getBrowserSupabase()
         const { data, error } = await supabase.auth.getSession()
         if (error || !data.session) {
           console.error('Auth session error:', error?.message ?? 'missing session')
@@ -51,6 +42,7 @@ function AuthCallbackPage() {
       }
 
       try {
+        const params = new URLSearchParams(window.location.search)
         const redirectParam =
           params.get('redirect') ?? sessionStorage.getItem(AUTH_REDIRECT_STORAGE_KEY)
         sessionStorage.removeItem(AUTH_REDIRECT_STORAGE_KEY)
@@ -63,8 +55,8 @@ function AuthCallbackPage() {
       }
     }
 
-    handleCallback()
-  }, [navigate, queryClient])
+    finishAuth()
+  }, [codePresent, exchangeError, navigate, queryClient])
 
   if (errorMessage) {
     return (

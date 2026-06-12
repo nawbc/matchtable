@@ -1,0 +1,52 @@
+.sectionDivider {
+  margin: var(--space-4) 0;
+}
+
+.compareTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-2);
+}
+
+.compareTable th {
+  padding: var(--space-1) var(--space-2);
+  text-align: left;
+  font-weight: var(--font-weight-medium);
+  color: var(--gray-11);
+  border-bottom: 1px solid var(--gray-a5);
+}
+
+.compareTable th:first-child {
+  width: 28%;
+}
+
+.compareTable td {
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--gray-a5);
+  color: var(--gray-12);
+}
+
+.compareTable tr:last-child td,
+.compareTable tr:last-child th {
+  border-bottom: none;
+}
+
+.filterRow {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-2);
+  background: var(--gray-3);
+}
+
+.recentItem a {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-2);
+  background: var(--gray-3);
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.recentItem a:hover {
+  background: var(--gray-4);
+}

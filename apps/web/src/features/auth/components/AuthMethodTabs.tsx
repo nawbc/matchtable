@@ -1,3 +1,5 @@
+import { Flex, SegmentedControl } from '@matchtable/ui'
+
 type AuthMethod = 'email' | 'phone'
 
 type AuthMethodTabsProps = {
@@ -7,26 +9,22 @@ type AuthMethodTabsProps = {
 
 export function AuthMethodTabs({ value, onChange }: AuthMethodTabsProps) {
   return (
-    <div className="authMethodTabs" role="tablist" aria-label="登录方式">
-      <button
-        type="button"
-        role="tab"
-        aria-selected={value === 'email'}
-        className={value === 'email' ? 'authMethodTab authMethodTabActive' : 'authMethodTab'}
-        onClick={() => onChange('email')}
+    <Flex justify="center" mb="3">
+      <SegmentedControl.Root
+        size="2"
+        radius="full"
+        value={value}
+        onValueChange={(next) => {
+          if (next === 'email' || next === 'phone') {
+            onChange(next)
+          }
+        }}
+        aria-label="登录方式"
       >
-        邮箱
-      </button>
-      <button
-        type="button"
-        role="tab"
-        aria-selected={value === 'phone'}
-        className={value === 'phone' ? 'authMethodTab authMethodTabActive' : 'authMethodTab'}
-        onClick={() => onChange('phone')}
-      >
-        手机
-      </button>
-    </div>
+        <SegmentedControl.Item value="email">邮箱</SegmentedControl.Item>
+        <SegmentedControl.Item value="phone">手机</SegmentedControl.Item>
+      </SegmentedControl.Root>
+    </Flex>
   )
 }
 

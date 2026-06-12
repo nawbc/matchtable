@@ -10,7 +10,8 @@
   transition:
     background 0.15s,
     border-color 0.15s,
-    opacity 0.15s;
+    opacity 0.15s,
+    color 0.15s;
 }
 
 .button:disabled {
@@ -21,6 +22,7 @@
 .sm {
   padding: var(--space-xs) var(--space-sm);
   font-size: 0.8125rem;
+  border-radius: var(--radius-sm);
 }
 
 .md {
@@ -33,6 +35,13 @@
   font-size: 1rem;
 }
 
+.xl {
+  padding: var(--space-md) var(--space-xl);
+  font-size: 1.0625rem;
+  border-radius: var(--radius-md);
+}
+
+/* solid + highContrast (Themes default CTA) */
 .primary {
   background: var(--color-accent);
   color: var(--color-accent-text);
@@ -42,10 +51,21 @@
   background: var(--color-accent-hover);
 }
 
+/* soft gray surface */
+.soft {
+  background: var(--color-surface-soft);
+  color: var(--color-text);
+}
+
+.soft:hover:not(:disabled) {
+  background: var(--color-border);
+}
+
 .secondary {
   background: var(--color-surface);
   color: var(--color-text);
   border-color: var(--color-border);
+  box-shadow: var(--shadow-card);
 }
 
 .secondary:hover:not(:disabled) {
@@ -58,7 +78,7 @@
 }
 
 .ghost:hover:not(:disabled) {
-  background: var(--color-border);
+  background: var(--color-surface-soft);
   color: var(--color-text);
 }
 

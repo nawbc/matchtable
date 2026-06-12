@@ -1,0 +1,46 @@
+---
+description: 特别说明须写入代码/组件注释，避免仅靠口头或 PR 描述
+alwaysApply: true
+---
+
+# Special Notes in Code
+
+When a requirement, constraint, or non-obvious behavior is **especially emphasized** (product note, SSR/auth caveat, stacking/layout contract, "do not change", cross-page global behavior), **document it in the code** — not only in chat or docs.
+
+## Where to comment
+
+| Location | Use for |
+|----------|---------|
+| Component / route (TSX) | Placement, global vs page-local, SSR vs client split |
+| Module / server function (TS) | Auth, cookies, PKCE, data flow exceptions |
+| CSS Modules / `global.css` | z-index, bleed, fixed layers, stacking contexts |
+
+## Style
+
+- Comments in **English** (same as source code).
+- Explain **why** and **what must not change**, not what the line literally does.
+- Prefer a short block comment above the relevant block; use `/** */` for exported APIs when the contract matters.
+- Do **not** comment every line; only decisions that are easy to break or easy to misunderstand.
+
+## Examples
+
+```tsx
+// Global fixed mesh — all routes share this; do not mount per-page HeroBackground.
+<HeroBackground fixed />
+```
+
+```ts
+// OAuth PKCE: exchange on the server so the code verifier cookie from sign-in is available.
+const { error } = await supabase.auth.exchangeCodeForSession(code)
+```
+
+```css
+/* Stacking: fixed background z-index 0; header 20; main content 1. */
+.appShell {
+  isolation: isolate;
+}
+```
+
+## Agent workflow
+
+When implementing or restoring an emphasized behavior, add or update the matching comment in the same change. If you move logic (e.g. root → page), move the comment too.

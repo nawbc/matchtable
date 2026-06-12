@@ -1,8 +1,9 @@
-import { Button, TableCard } from '@matchtable/ui'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { TableCard } from '@matchtable/ui'
+import { createFileRoute } from '@tanstack/react-router'
 import { Suspense } from 'react'
 
-import { ProfileCtaButton, resolveFeaturedEmptyMessage } from '~/features/profile/profile-cta'
+import { HomeHero } from '~/components/HomeHero'
+import { resolveFeaturedEmptyMessage } from '~/features/profile/profile-cta'
 import { myProfileQueryOptions } from '~/features/profile/queries'
 import { listProfiles } from '~/features/profile/server'
 
@@ -15,7 +16,7 @@ export const Route = createFileRoute('/')({
     const result = await listProfiles({
       data: { page: 1, pageSize: 6, sort: 'newest' },
     })
-    return { featured: result.profiles.slice(0, 3), myProfile, session }
+    return { featured: result.profiles, myProfile, session }
   },
   component: HomePage,
 })
@@ -25,22 +26,14 @@ function HomePage() {
   const emptyMessage = resolveFeaturedEmptyMessage(session, myProfile)
 
   return (
-    <div>
-      <section style={{ marginBottom: 'var(--space-2xl)' }}>
-        <h1 className="pageTitle">相亲表</h1>
-        <p className="pageSubtitle">结构化相亲资料 — 清晰展示、横向对比、精致呈现。</p>
-        <div style={{ display: 'flex', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
-          <Link to="/discover" search={{ sort: 'newest', page: 1, pageSize: 20 }}>
-            <Button>浏览发现广场</Button>
-          </Link>
-          <ProfileCtaButton ssrSession={session} ssrProfile={myProfile} />
-        </div>
-      </section>
+    <>
+      <div className="homeHeroBleed">
+        <HomeHero featured={featured} session={session} myProfile={myProfile} />
+      </div>
 
-      <section>
-        <h2 className="pageTitle" style={{ fontSize: '1.25rem' }}>
-          最新资料
-        </h2>
+      <section className="homeFeatured">
+        <h2 className="homeFeaturedTitle">最新资料</h2>
+        <p className="homeFeaturedDesc">浏览最近更新的公开相亲表，点击进入详情或加入对比。</p>
         <Suspense fallback={<div className="skeleton" style={{ height: 200 }} />}>
           {featured.length === 0 ? (
             <p className="emptyState">{emptyMessage}</p>
@@ -53,6 +46,6 @@ function HomePage() {
           )}
         </Suspense>
       </section>
-    </div>
+    </>
   )
 }

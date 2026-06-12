@@ -1,5 +1,6 @@
 import { createBrowserClient as createSupabaseBrowserClient } from '@supabase/ssr'
 
+import { createDocumentCookieStore } from './browser-cookies'
 import type { Database } from './types'
 
 export function getSupabaseEnv() {
@@ -13,5 +14,21 @@ export function getSupabaseEnv() {
 
 export function createBrowserClient() {
   const { url, anonKey } = getSupabaseEnv()
-  return createSupabaseBrowserClient<Database>(url, anonKey)
+
+  // Store PKCE verifier in cookies (SSR-readable). Callback exchange runs on the server.
+  const browserOptions =
+    typeof document !== 'undefined'
+      ? {
+          cookies: createDocumentCookieStore(),
+          auth: {
+            detectSessionInUrl: false,
+          },
+        }
+      : {
+          auth: {
+            detectSessionInUrl: false,
+          },
+        }
+
+  return createSupabaseBrowserClient<Database>(url, anonKey, browserOptions)
 }

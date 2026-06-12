@@ -18,7 +18,8 @@ alwaysApply: true
 - **React 19** + **Strict TypeScript**
 - **Supabase** — Auth、Database、Storage、Realtime，所有表启用 RLS
 - **Zod** — 表单、API、Server Functions 校验
-- **CSS Modules** — 组件样式（`.module.css`）；shadcn/ui + Radix UI，样式适配为 CSS Modules
+- **@radix-ui/themes** — `MatchTableTheme`（`accentColor="gray"`）；`Card` / `Button` / `TextField` / `Separator` 等官方组件与圆角阴影 token（`--radius-*`、`--shadow-4`）
+- **CSS Modules** — 页面布局与业务局部样式（`.module.css`）；与 Radix Themes 并存，不重复实现 Button/Card 皮肤
 
 ## 禁止使用
 

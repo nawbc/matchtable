@@ -1,0 +1,23 @@
+.root {
+  flex-shrink: 0;
+  background: var(--color-border);
+  border: none;
+}
+
+.horizontal {
+  width: 100%;
+  height: 1px;
+}
+
+.horizontalSm {
+  margin: var(--space-md) 0;
+}
+
+.horizontalLg {
+  margin: var(--space-lg) 0;
+}
+
+.vertical {
+  width: 1px;
+  align-self: stretch;
+}

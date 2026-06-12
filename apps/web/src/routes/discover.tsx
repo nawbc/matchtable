@@ -5,10 +5,11 @@ import {
   GENDER_LABELS,
   GENDER_OPTIONS,
 } from '@matchtable/shared'
-import { TableCard } from '@matchtable/ui'
+import { Button, Card, TableCard } from '@matchtable/ui'
 import { createFileRoute } from '@tanstack/react-router'
 import { Suspense, useState } from 'react'
 
+import { PageHeader } from '~/components/PageHeader'
 import { ProfileCtaButton } from '~/features/profile/profile-cta'
 import { myProfileQueryOptions } from '~/features/profile/queries'
 import { listProfiles } from '~/features/profile/server'
@@ -62,20 +63,11 @@ function DiscoverPage() {
 
   return (
     <div>
-      <h1 className="pageTitle">发现</h1>
-      <p className="pageSubtitle">浏览结构化的相亲表资料</p>
-      <div
-        style={{
-          display: 'flex',
-          gap: 'var(--space-sm)',
-          flexWrap: 'wrap',
-          marginBottom: 'var(--space-lg)',
-        }}
-      >
+      <PageHeader title="发现" subtitle="浏览结构化的相亲表资料">
         <ProfileCtaButton ssrSession={data.session} ssrProfile={data.myProfile} />
-      </div>
+      </PageHeader>
 
-      <div className="filters">
+      <Card variant="solid" className="filters">
         <div className="filterField">
           <label htmlFor="gender">性别</label>
           <select
@@ -207,10 +199,12 @@ function DiscoverPage() {
             <option value="recent">最近活跃</option>
           </select>
         </div>
-        <button type="button" className="filterField" onClick={applyFilters}>
-          应用筛选
-        </button>
-      </div>
+        <div className="filterActions">
+          <Button type="button" onClick={applyFilters}>
+            应用筛选
+          </Button>
+        </div>
+      </Card>
 
       <Suspense fallback={<div className="skeleton" style={{ height: 300 }} />}>
         {data.profiles.length === 0 ? (
@@ -225,44 +219,32 @@ function DiscoverPage() {
       </Suspense>
 
       {data.total > 0 ? (
-        <nav
-          className="pagination"
-          aria-label="分页"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 'var(--space-md)',
-            marginTop: 'var(--space-lg)',
-          }}
-        >
-          <button
+        <nav className="pagination" aria-label="分页">
+          <Button
             type="button"
+            variant="soft"
+            size="sm"
             disabled={currentPage <= 1}
             onClick={() => goToPage(currentPage - 1)}
           >
             上一页
-          </button>
-          <span style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
+          </Button>
+          <span className="paginationMeta">
             第 {currentPage} / {totalPages} 页
           </span>
-          <button
+          <Button
             type="button"
+            variant="soft"
+            size="sm"
             disabled={currentPage >= totalPages}
             onClick={() => goToPage(currentPage + 1)}
           >
             下一页
-          </button>
+          </Button>
         </nav>
       ) : null}
 
-      <p
-        style={{
-          marginTop: 'var(--space-lg)',
-          color: 'var(--color-text-muted)',
-          fontSize: '0.875rem',
-        }}
-      >
+      <p className="resultMeta">
         显示 {data.profiles.length} / {data.total} 条资料
       </p>
     </div>

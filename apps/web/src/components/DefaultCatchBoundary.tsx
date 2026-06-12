@@ -1,4 +1,4 @@
-import { Button } from '@matchtable/ui'
+import { Button, Card } from '@matchtable/ui'
 import { ErrorComponent, Link, useLocation, useRouter } from '@tanstack/react-router'
 import type { ErrorComponentProps } from '@tanstack/react-router'
 
@@ -13,7 +13,7 @@ export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
   console.error('DefaultCatchBoundary Error:', error)
 
   return (
-    <div className={styles.root}>
+    <Card className={styles.root}>
       <ErrorComponent error={error} />
       <div className={styles.actions}>
         <Button type="button" onClick={() => router.invalidate()}>
@@ -21,14 +21,14 @@ export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
         </Button>
         {isRoot ? (
           <Link to="/">
-            <Button variant="secondary">首页</Button>
+            <Button variant="soft">首页</Button>
           </Link>
         ) : (
-          <Button type="button" variant="secondary" onClick={() => window.history.back()}>
+          <Button type="button" variant="soft" onClick={() => window.history.back()}>
             返回
           </Button>
         )}
       </div>
-    </div>
+    </Card>
   )
 }

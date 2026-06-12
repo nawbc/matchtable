@@ -47,13 +47,17 @@ export function resolveFeaturedEmptyMessage(
 type ProfileCtaButtonProps = {
   ssrSession?: AuthSession | null
   ssrProfile?: MyProfile | null
-  variant?: 'primary' | 'secondary'
+  variant?: 'primary' | 'soft' | 'secondary'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
+  fullWidth?: boolean
 }
 
 export function ProfileCtaButton({
   ssrSession,
   ssrProfile,
   variant = 'secondary',
+  size,
+  fullWidth,
 }: ProfileCtaButtonProps) {
   const [hydrated, setHydrated] = useState(false)
 
@@ -79,7 +83,9 @@ export function ProfileCtaButton({
 
   return (
     <Link to={cta.to} search={cta.search}>
-      <Button variant={variant}>{cta.label}</Button>
+      <Button variant={variant} size={size} fullWidth={fullWidth}>
+        {cta.label}
+      </Button>
     </Link>
   )
 }

@@ -1,36 +1,47 @@
-import { Slot } from '@radix-ui/react-slot'
-import type { ButtonHTMLAttributes } from 'react'
+import { Button as RadixButton, type ButtonProps as RadixButtonProps } from '@radix-ui/themes'
 
-import styles from './Button.module.css'
+type ButtonVariant = 'primary' | 'soft' | 'secondary' | 'ghost' | 'danger'
+type ButtonSize = 'sm' | 'md' | 'lg' | 'xl'
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
-type ButtonSize = 'sm' | 'md' | 'lg'
+const VARIANT_PROPS: Record<
+  ButtonVariant,
+  Pick<RadixButtonProps, 'variant' | 'color' | 'highContrast'>
+> = {
+  primary: { variant: 'solid', color: 'gray', highContrast: true },
+  soft: { variant: 'soft', color: 'gray', highContrast: true },
+  secondary: { variant: 'surface', color: 'gray' },
+  ghost: { variant: 'ghost', color: 'gray' },
+  danger: { variant: 'solid', color: 'red', highContrast: true },
+}
 
-export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+const SIZE_MAP: Record<ButtonSize, RadixButtonProps['size']> = {
+  sm: '1',
+  md: '2',
+  lg: '3',
+  xl: '4',
+}
+
+export type ButtonProps = Omit<RadixButtonProps, 'variant' | 'size' | 'color' | 'highContrast'> & {
   variant?: ButtonVariant
   size?: ButtonSize
-  asChild?: boolean
   fullWidth?: boolean
 }
 
 export function Button({
   variant = 'primary',
   size = 'md',
-  asChild = false,
   fullWidth = false,
-  className,
+  style,
   ...props
 }: ButtonProps) {
-  const Comp = asChild ? Slot : 'button'
-  const classes = [
-    styles.button,
-    styles[variant],
-    styles[size],
-    fullWidth ? styles.fullWidth : '',
-    className ?? '',
-  ]
-    .filter(Boolean)
-    .join(' ')
+  const radixVariant = VARIANT_PROPS[variant]
 
-  return <Comp className={classes} {...props} />
+  return (
+    <RadixButton
+      size={SIZE_MAP[size]}
+      style={{ width: fullWidth ? '100%' : undefined, ...style }}
+      {...radixVariant}
+      {...props}
+    />
+  )
 }

@@ -1,3 +1,4 @@
+import { Card, Heading, Text } from '@matchtable/ui'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
@@ -32,28 +33,34 @@ function LoginPage() {
 
   return (
     <div className="authCard">
-      <header className="authHeader">
-        <h1 className="pageTitle">登录</h1>
-        <p className="pageSubtitle">欢迎回到 MatchTable</p>
-      </header>
+      <Card className="authCardSurface">
+        <header className="authHeader">
+          <Heading size="4" mb="1">
+            登录
+          </Heading>
+          <Text size="2" color="gray">
+            欢迎回到 MatchTable
+          </Text>
+        </header>
 
-      <AuthMethodTabs value={method} onChange={setMethod} />
+        <AuthMethodTabs value={method} onChange={setMethod} />
 
-      {method === 'email' ? (
-        <EmailLoginForm redirect={redirectParam} />
-      ) : (
-        <PhoneOtpForm mode="login" redirect={redirectParam} />
-      )}
+        {method === 'email' ? (
+          <EmailLoginForm redirect={redirectParam} />
+        ) : (
+          <PhoneOtpForm mode="login" redirect={redirectParam} />
+        )}
 
-      <div className="divider">或使用第三方账号</div>
+        <div className="divider">或使用第三方账号</div>
 
-      <OAuthButtons mode="login" onError={setOauthError} />
+        <OAuthButtons mode="login" onError={setOauthError} />
 
-      {oauthError ? <p className="authError">{oauthError}</p> : null}
+        {oauthError ? <p className="authError">{oauthError}</p> : null}
 
-      <p className="authFooterLink">
-        还没有账号？<Link to="/register">注册</Link>
-      </p>
+        <p className="authFooterLink">
+          还没有账号？<Link to="/register">注册</Link>
+        </p>
+      </Card>
     </div>
   )
 }
